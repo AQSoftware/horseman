@@ -9,13 +9,13 @@ import {
 } from 'aq-miniapp';
 import './css/Create.css';
 
-const TITLE = "Bubble Wrap";
-// const COVER_IMAGE = {
-//   imageBig: "http://cdn1.benggaapp.com/720/F215890529134WS3YP2.jpg",
-//   imageSmall: "http://cdn1.benggaapp.com/160/F215890529134WS3YP2.jpg"
-// }
+const TITLE = "MiniApp";
 
 export default class Create extends Component {
+
+  state: {
+    coverImg: string
+  }
 
   componentWillMount(){
     // Set callback function to be called when AQ app requests to preview the
