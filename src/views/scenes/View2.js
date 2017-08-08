@@ -1,27 +1,40 @@
-import HexiGroup from '../HexiGroup';
-import Button from '../components/Button';
+// @flow
+import { HexiGroup, HexiButton } from '../../components';
+import Assets, { DYNAMIC_ASSETS } from '../../assets';
 
-const BUTTON_Y_POS_AS_PERCENTAGE_OF_HEIGHT = 0.8;
+type Props = {
+  onPress: (void) => void,
+  dynamicAssetIndex: number
+}
 
-export default class View2 extends HexiGroup {
+const VERTICAL_OFFSET = 400;
+const BUTTON_WIDTH = 227;
+const BUTTON_HEIGHT = 69;
 
+export default class View1 extends HexiGroup {
   setup(){
-    const button = new Button(this.g, 300, 100, {
-      title: 'Next'
+    this.button = new HexiButton(this.hexi, 227, 69, {
+      title: 'Next',
+      textureAtlas: Assets.textures.button,
+      onPress: this.props.onPress
     });
-    button.setup();
-    this.button = button.scene;
+    this.button.setup();
+    this.button.scene.setPosition(
+      (this.width - BUTTON_WIDTH) / 2.0,
+      (this.height - BUTTON_HEIGHT) / 2.0 + VERTICAL_OFFSET
+    )
+    this.scene.addChild(this.button.scene);
 
-    this.button.setPosition((this.width - this.button.width) / 2, this.height * BUTTON_Y_POS_AS_PERCENTAGE_OF_HEIGHT);
-    this.scene.addChild(this.button);
+    this.image = this.hexi.sprite(DYNAMIC_ASSETS[this.props.dynamicAssetIndex]);
+    this.image.setPosition(
+      (this.width - this.image.width) / 2.0,
+      (this.height - this.image.height) / 2.0
+    )
+    this.scene.addChild(this.image);
   }
 
-  onTap(){
-    let retVal = false;
-    if (this.g.pointer.hitTestSprite(this.button) && this.props.onClick) {
-      this.props.onClick();
-      retVal = true;
-    }
-    return retVal;
+  set enabled(value: boolean){
+    super.enabled = value;
+    this.button.enabled = value;
   }
 }

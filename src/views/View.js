@@ -1,99 +1,74 @@
 // @flow
-import React, { Component } from 'react';
+import Assets, { ASSETS, DYNAMIC_ASSETS } from '../assets';
+import HexiGroup from '../components/HexiGroup';
 import {
-  CloudStorage,
-  // defaultLifeCycle
-} from 'aq-miniapp';
+  BackgroundScene,
+  View1, View2, View3
+} from './scenes';
 
-import Assets from '../assets';
-import HexiGroup from './HexiGroup';
-import BackgroundScene from './scenes/BackgroundScene';
-import View1 from './scenes/View1';
-import View2 from './scenes/View2';
-import View3 from './scenes/View3';
-
-import type { Output } from './Types';
-
-const thingsToLoad = [
-  Assets.images.button,
-  Assets.sounds.pop
-];
-
-// const GAME_WIDTH = 528;
-// const GAME_HEIGHT = 939;
-
-const GAME_WIDTH = window.innerWidth * 1.5;
-const GAME_HEIGHT = window.innerHeight * 1.5;
 const BACKGROUND_COLOR = 0x0;
-const FPS = 30;
-
-// const JOIN_IMAGE = "http://lorempixel.com/320/568/";
 
 type Props = {
-  cloudStorageClient: CloudStorage,
-  id?: string,
-  data? : Object,
-  mode: 'preview' | 'join'
+  width: number,
+  height: number,
+  fps: number,
+  dynamicAssetIndex: number
 }
 
-export default class View extends Component {
-  state: {
-    output: Output,
-    data: ?Object,
-    mode: 'preview' | 'join',
-  }
+export default class View {
 
-  g: any;
-  backgroundScene: BackgroundScene;
-  view1: View1;
-  view2: View2;
-  view3: View3;
-  pageNumber: number;
+  hexi: any;
   scenes: Array<HexiGroup>;
+  pageNumber: number;
+  backgroundScene: HexiGroup;
+  currentScene: ?HexiGroup;
 
   constructor(props: Props){
-    super(props);
-    this.g = window.hexi(GAME_WIDTH, GAME_HEIGHT, this.setup.bind(this), thingsToLoad, this.load.bind(this));
-    this.g.fps = FPS;
-    this.g.backgroundColor = BACKGROUND_COLOR;
-    this.g.scaleToWindow();
+    // Build array of assets to be used. Merge common assets with
+    // one of the dynamic assets, specified by props.dynamicAssetIndex
+    const thingsToLoad = ASSETS.concat([DYNAMIC_ASSETS[props.dynamicAssetIndex]]);
 
-    // Instantiate necessary scenes
-    this.backgroundScene = new BackgroundScene(this.g, GAME_WIDTH, GAME_HEIGHT);
-    this.view1 = new View1(this.g, GAME_WIDTH, GAME_HEIGHT, {
-      onClick: this._onView1Click.bind(this)
-    });
-    this.view2 = new View2(this.g, GAME_WIDTH, GAME_HEIGHT, {
-      onClick: this._onView2Click.bind(this)
-    });
-    this.view3 = new View3(this.g, GAME_WIDTH, GAME_HEIGHT, {
-      onClick: this._onView3Click.bind(this)
-    });
+    this.hexi = window.hexi(props.width, props.height, this.setup.bind(this), thingsToLoad, this.load.bind(this));
+    this.hexi.fps = props.fps;
+    this.hexi.backgroundColor = BACKGROUND_COLOR;
+    this.hexi.scaleToWindow();
 
-    // Put them in our array for gesture handling
-    this.scenes = [
-      this.view1,
-      this.view2,
-      this.view3
-    ];
-    this.g.pointer.tap = this._onTap.bind(this);
+    this.scenes = [];
+    // Instantiate background scene
+    this.backgroundScene = new BackgroundScene(this.hexi, props.width, props.height);
+
+    // Instantiate view scenes
+    this.scenes.push({name: 'view1', scene: new View1(this.hexi, props.width, props.height, {
+      onPress: this._onView1Click.bind(this)
+    })});
+    this.scenes.push({name: 'view2', scene: new View2(this.hexi, props.width, props.height, {
+      onPress: this._onView2Click.bind(this),
+      dynamicAssetIndex: props.dynamicAssetIndex
+    })});
+    this.scenes.push({name: 'view3', scene: new View3(this.hexi, props.width, props.height, {
+      onPress: this._onView3Click.bind(this)
+    })});
   }
 
-  componentDidMount(){
-    // defaultLifeCycle.setAppData({backgroundImage: `${window.location.origin}${bg}`});
-    this.g.start();
+  start() {
+    this.hexi.start();
   }
 
+  /**
+  Loading function to load assets
+  */
   load(){
-    this.g.loadingBar();
+    this.hexi.loadingBar();
   }
 
+  /**
+  Setup function to setup scenes
+  */
   setup(){
     this.backgroundScene.setup();
-    this.view1.setup();
-    this.view2.setup();
-    this.view3.setup();
-
+    for(let i = 0; i < this.scenes.length; i++){
+      this.scenes[i]['scene'].setup();
+    }
     this._setPage(0);
   }
 
@@ -103,13 +78,10 @@ export default class View extends Component {
   }
 
   _updateScene(){
-    for (let i=0; i< this.scenes.length; i++){
-      this.scenes[i].scene.visible = i === this.pageNumber
+    for(let i = 0; i < this.scenes.length; i++){
+      this.scenes[i]['scene'].scene.visible = i === this.pageNumber;
+      this.scenes[i]['scene'].enabled = i === this.pageNumber;
     }
-  }
-
-  _onTap(){
-    this.scenes[this.pageNumber].onTap();
   }
 
   _onView1Click(){
@@ -122,18 +94,5 @@ export default class View extends Component {
 
   _onView3Click(){
     this._setPage(0);
-  }
-
-  render() {
-    if (this.g.canvas) {
-      return <div ref={item => {
-        if (item){
-          item.appendChild(this.g.canvas);
-        }
-      }}/>
-    }
-    else {
-      return null;
-    }
   }
 }
