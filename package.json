@@ -1,7 +1,8 @@
 {
-  "name": "push-toy",
+  "name": "horseman",
+  "homepage": "https://zu1in.github.io/horseman",
   "version": "1.0.0",
-  "description": "Push Toy MiniApp",
+  "description": "Horseman MiniApp",
   "private": true,
   "scripts": {
     "start": "node scripts/start.js",
