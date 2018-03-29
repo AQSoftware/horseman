@@ -91,8 +91,12 @@ export default class Horseman extends PixiContainer {
     return r;
   }
 
+  setIndex() {
+    this.rIndex = this.rotation;    
+  }
+
   setRotation(distance) {
-    this.rIndex = this.rotation;
+    this.setIndex();
     this.horseman.play();
   }
 

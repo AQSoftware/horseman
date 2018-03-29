@@ -1,4 +1,7 @@
-import PixiContainer from './PixiContainer'
+import PixiContainer from './PixiContainer';
+
+import TweenMax from '../libs/gsap/TweenMax.min';
+import PixiPlugin from '../libs/gsap/plugins/PixiPlugin.min';
 
 export default class Skeleton extends PixiContainer {
   setup(width, height, flail) {
@@ -148,5 +151,32 @@ export default class Skeleton extends PixiContainer {
     var pos = this.idle[0].x + " - " + this.idle[1].x + " - " + this.idle[2].x + " - " + this.idle[3].x;
     return pos;
   }
+
+  killAt(i) {
+    this.idle[i].visible = false;
+    this.images[i].visible = true;
+    this.images[i].play();
+
+    var coords = {
+      x: this.heads[i].x,
+      y: this.heads[i].y
+    };
+
+    TweenLite.to(this.heads[i], .3, {
+      alpha: 0, x: "+=180", y: "-=40", onComplete: function (i) {
+        this.heads[i].x = coords.x;
+        this.heads[i].y = coords.y;
+        TweenLite.to(this.heads[i], .3, { alpha: 1 });
+        this.resetAt(i);
+      }.bind(this, i)
+    });
+  }
+
+  resetAt(i) {
+    this.idle[i].visible = true;
+    this.images[i].visible = false;
+    this.images[i].gotoAndStop(0);
+  }
+
 
 }

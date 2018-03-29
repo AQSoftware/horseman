@@ -7,7 +7,7 @@ import {
 
 const BACKGROUND_COLOR = 0x83b8a8;
 
-export default class View {
+export default class App {
 
   constructor(props) {
     this.props = props;
@@ -68,8 +68,10 @@ export default class View {
     if (this.currentScene) {
       this.app.stage.removeChild(this.currentScene);
     }
-    this.currentScene = this.scenes[page].scene.scene;
+    var view = this.scenes[page].scene;
+    this.currentScene = view.scene;
     this.app.stage.addChild(this.currentScene);
+    if(view.activate) view.activate();
   }
 
   _updateScene(delta) {
@@ -100,6 +102,7 @@ export default class View {
   }
 
   _onView1Click() {
+    this.scenes[0].scene.deactivate();// stop update ticks
     this.scenes[1].scene.startCounter();
     this._setPage(1);
   }

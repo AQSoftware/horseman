@@ -1,4 +1,4 @@
-import View from './views/View';
+import App from './views/App';
 
 // const GAME_WIDTH = 528;
 // const GAME_HEIGHT = 939;
@@ -20,5 +20,5 @@ const props = {
   /*fps: FPS*/
 };
 
-const view = new View(props);
-view.init();
+const app = new App(props);
+app.init();

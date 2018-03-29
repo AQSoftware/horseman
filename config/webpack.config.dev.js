@@ -59,6 +59,10 @@ module.exports = {
     // This is the URL that app is served from. We use "/" in development.
     publicPath: publicPath
   },
+  externals: {
+    // required to fix GSAP import error
+    'TweenLite': 'TweenLite'
+  },        
   resolve: {
     // This allows you to set a fallback for where Webpack should look for modules.
     // We placed these paths second because we want `node_modules` to "win"

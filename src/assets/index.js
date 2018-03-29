@@ -1,12 +1,11 @@
-//@flow
-import background from './images/background.jpg';
+import circle from './images/circle.png';
 import button from './textures/button.json';
 import horseman_minigame from './textures/horseman_minigame.json'
 
 /* Define common assets here */
 const Assets = {
   images: {
-    background: background
+    circle: circle
   },
   textures: {
     button: button,
@@ -25,7 +24,7 @@ View.js
 
 /* Array of common assets to be used by Hexi Loader */
 export const ASSETS = [
-  Assets.images.background,
+  Assets.images.circle,
   Assets.textures.button,
   Assets.textures.horseman_minigame
 ];

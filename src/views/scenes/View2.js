@@ -1,5 +1,4 @@
 import { PixiContainer, PixiButton, Horseman, Skeleton } from '../../components';
-import Assets, { DYNAMIC_ASSETS } from '../../assets';
 
 const VERTICAL_OFFSET = 20;
 const BUTTON_WIDTH = 227;
@@ -7,6 +6,13 @@ const BUTTON_HEIGHT = 69;
 var start = false;
 var neededKills = (Math.floor(Math.random() * 3) + 1) * 10 + (Math.floor(Math.random() * 2) * 5);
 if (neededKills > 30) neededKills = 30;
+
+
+
+
+neededKills = 2;
+
+
 
 var timer = 0;
 var start = false;
