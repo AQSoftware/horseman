@@ -1,17 +1,7 @@
-//@flow
 import PixiContainer from './PixiContainer';
 
-type Props = {
-  title: string,
-  textureAtlas: string,
-  onPress: (void) => void,
-  onOver?: (void) => void,
-  onOut?: (void) => void,
-  onTap?: (void) => void,
-}
-
-export default class Horseman extends PixiContainer{
-  setup(width,height){
+export default class Horseman extends PixiContainer {
+  setup(width, height) {
 
     this.width = width;
     this.height = height;
@@ -20,7 +10,7 @@ export default class Horseman extends PixiContainer{
 
     this.rotation = 0.1;
 
-    if(this.width > this.height){
+    if (this.width > this.height) {
       this.scaleWidth = this.height;
     }
 
@@ -29,8 +19,8 @@ export default class Horseman extends PixiContainer{
     this.container = new this.pixi.Container();
 
     var frames = [];
-    for(var f=1;f<16;f++){
-      frames.push(this.pixi.utils.TextureCache["horseman_walk"+f+".png"]);
+    for (var f = 1; f < 16; f++) {
+      frames.push(this.pixi.utils.TextureCache["horseman_walk" + f + ".png"]);
     }
     this.horseman = new this.pixi.extras.AnimatedSprite(frames);
     this.horseman.animationSpeed = 0.2;
@@ -38,7 +28,7 @@ export default class Horseman extends PixiContainer{
     var hScale = this.horseman.height / this.horseman.width;
     this.horseman.width = this.scaleWidth / 1.15;
     this.horseman.height = this.horseman.width * hScale
-    this.horseman.x = this.width/2 - this.horseman.width/2;
+    this.horseman.x = this.width / 2 - this.horseman.width / 2;
     this.horseman.y = this.height / 2 - this.horseman.height / 1.3;
 
     this.flail = new this.pixi.Sprite(this.pixi.utils.TextureCache["horseman_flail.png"]);
@@ -58,68 +48,68 @@ export default class Horseman extends PixiContainer{
     this.container.addChild(this.horseman);
     this.container.addChild(this.flail);
 
-    var flailWidth = this.flail.width/3;
-    for(var i=0;i<8;i+=2){
+    var flailWidth = this.flail.width / 3;
+    for (var i = 0; i < 8; i += 2) {
       var red = new this.pixi.Graphics();
       red.beginFill(0xf70400);
-      red.drawCircle(0,0,flailWidth-(i/2));
+      red.drawCircle(0, 0, flailWidth - (i / 2));
       red.endFill();
       this.container.addChild(red);
       this.flameTrail[i] = red;
     }
 
-    for(var i=0;i<8;i+=2){
+    for (var i = 0; i < 8; i += 2) {
       var yellow = new this.pixi.Graphics();
       yellow.beginFill(0xf2f700);
-      yellow.drawCircle(0,0,flailWidth/2-(i/1.5));
+      yellow.drawCircle(0, 0, flailWidth / 2 - (i / 1.5));
       yellow.endFill();
       this.container.addChild(yellow);
-      this.flameTrail[i+1] = yellow;
+      this.flameTrail[i + 1] = yellow;
     }
-    for(var f=0;f<this.flameTrail.length;f+=2){
-      var x = this.flail.x + Math.cos(this.flail.rotation-Math.PI/(2.2+f/20)) * (this.flail.height-20);
-      var y = this.flail.y + Math.sin(this.flail.rotation-Math.PI/(2.2+f/20)) * (this.flail.height-20);
+    for (var f = 0; f < this.flameTrail.length; f += 2) {
+      var x = this.flail.x + Math.cos(this.flail.rotation - Math.PI / (2.2 + f / 20)) * (this.flail.height - 20);
+      var y = this.flail.y + Math.sin(this.flail.rotation - Math.PI / (2.2 + f / 20)) * (this.flail.height - 20);
       this.flameTrail[f].x = x;
       this.flameTrail[f].y = y;
-      this.flameTrail[f+1].x = x;
-      this.flameTrail[f+1].y = y;
+      this.flameTrail[f + 1].x = x;
+      this.flameTrail[f + 1].y = y;
     }
     this.stepCounter = 0;
   }
 
-  getFlailPosition(){
-    var x = this.flail.x + Math.cos(this.flail.rotation-Math.PI/2) * (this.flail.height-20);
-    var y = this.flail.y + Math.sin(this.flail.rotation-Math.PI/2) * (this.flail.height-20);
-    var p = {x:x, y:y};
+  getFlailPosition() {
+    var x = this.flail.x + Math.cos(this.flail.rotation - Math.PI / 2) * (this.flail.height - 20);
+    var y = this.flail.y + Math.sin(this.flail.rotation - Math.PI / 2) * (this.flail.height - 20);
+    var p = { x: x, y: y };
     return p;
   }
 
-  getHorseDimensions(){return {x:this.flail.x, y:this.flail.y, height:this.flail.height}}
+  getHorseDimensions() { return { x: this.flail.x, y: this.flail.y, height: this.flail.height } }
 
-  getRotation(){
+  getRotation() {
     var r = this.flail.rotation;
     return r;
   }
 
-  setRotation(distance){
+  setRotation(distance) {
     this.rIndex = this.rotation;
     this.horseman.play();
   }
 
-  animateFlail(){
+  animateFlail() {
     this.flail.rotation -= this.rIndex;
     this.stepCounter++;
-    if(this.flail.rotation <= -Math.PI*2){
-      this.flail.rotation = 0 + Math.PI*2 + this.flail.rotation;
+    if (this.flail.rotation <= -Math.PI * 2) {
+      this.flail.rotation = 0 + Math.PI * 2 + this.flail.rotation;
       this.stepCounter = 0;
     }
-    for(var f=0;f<this.flameTrail.length;f+=2){
-      var x = this.flail.x + Math.cos(this.flail.rotation-Math.PI/(2.2+f/20)) * (this.flail.height-20);
-      var y = this.flail.y + Math.sin(this.flail.rotation-Math.PI/(2.2+f/20)) * (this.flail.height-20);
+    for (var f = 0; f < this.flameTrail.length; f += 2) {
+      var x = this.flail.x + Math.cos(this.flail.rotation - Math.PI / (2.2 + f / 20)) * (this.flail.height - 20);
+      var y = this.flail.y + Math.sin(this.flail.rotation - Math.PI / (2.2 + f / 20)) * (this.flail.height - 20);
       this.flameTrail[f].x = x;
       this.flameTrail[f].y = y;
-      this.flameTrail[f+1].x = x;
-      this.flameTrail[f+1].y = y;
+      this.flameTrail[f + 1].x = x;
+      this.flameTrail[f + 1].y = y;
     }
   }
 }
