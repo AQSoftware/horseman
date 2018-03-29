@@ -3,20 +3,17 @@ import { PixiContainer, PixiButton, Horseman, Skeleton } from '../../components'
 const VERTICAL_OFFSET = 20;
 const BUTTON_WIDTH = 227;
 const BUTTON_HEIGHT = 69;
-var start = false;
-var neededKills = (Math.floor(Math.random() * 3) + 1) * 10 + (Math.floor(Math.random() * 2) * 5);
-if (neededKills > 30) neededKills = 30;
-
-
-
-
-neededKills = 2;
-
-
 
 var timer = 0;
 var start = false;
 var killCount = 0;
+
+const BUILDUP_TIME = 7;// 7 sec speed buildup
+const SKLT_SPEED_START = 0.01;
+const SKLT_SPEED_MAX = 0.1;
+const HRS_SPEED_START = 0.01;
+const HRS_SPEED_MAX = 0.2;
+var xSpeed = 0.1;
 
 export default class View2 extends PixiContainer {
   setup() {
@@ -44,31 +41,52 @@ export default class View2 extends PixiContainer {
       fill: '#e90804',
     });
 
+    this.message = new this.pixi.Text("Game Over", {
+      fontFamily: 'Arial',
+      fontSize: 38,
+      fill: '#ffffff',
+    });
+    this.message.anchor.x = 0.5;
+    this.message.anchor.y = 0;
+    this.message.x = this.width / 2;
+    this.message.y = this.height * .1;
+    this.message.alpha = 0;
+
     this.gameContainer = new this.pixi.Container();
-    this.fakeText = new this.pixi.Text('0/ ' + neededKills, style);
-    this.killCountText = new this.pixi.Text('0', style2);
-    this.killCountText.anchor.x = 0.5;
-    this.killCountText.anchor.y = 0.5;
-    this.killCountText.x = this.width / 2 - (this.fakeText.width / 2 - this.killCountText.width / 2);
-    this.killCountText.y = this.height - this.killCountText.height - 13;
 
-    this.neededKillsText = new this.pixi.Text("/" + neededKills, style);
-    this.neededKillsText.anchor.x = 0.5;
-    this.neededKillsText.anchor.y = 0.5;
-    this.neededKillsText.x = this.width / 2 + (this.fakeText.width / 2 - this.neededKillsText.width / 2)
-    this.neededKillsText.y = this.height - this.killCountText.height - 13;
+    this.killsText = new PIXI.Container();
 
-    this.timerText = new this.pixi.Text("Time left:   " + timer + " sec", { fill: 0xffffff });
-    this.timerText.anchor.x = 0.5;
-    this.timerText.anchor.y = 0.5;
-    this.timerText.x = this.width / 2;
-    this.timerText.y = this.height - 15;
+    var kills = new PIXI.Text('Kills:'.toUpperCase(), new PIXI.TextStyle({
+      fontFamily: "Arial",
+      fontSize: "22px",
+      fill: ['#ffffff'],
+      align: 'left',
+      dropShadow: true, dropShadowDistance: 2, dropShadowColor: 'grey'
+    }));
+    this.killsText.addChild(kills);
+
+    this.killCountText = new PIXI.Text('0', new PIXI.TextStyle({
+      fontFamily: "Arial",
+      fontSize: "48px",
+      fill: ['#ffffff'],
+      align: 'center',
+      dropShadow: true, dropShadowDistance: 2, dropShadowColor: 'grey'
+    }));
+    this.killCountText.x = 15;
+    this.killCountText.y = 20;
+    this.killsText.addChild(this.killCountText);
+
+    this.killsText.x = 10;
+    this.killsText.y = 10;
+    this.gameContainer.addChild(this.killsText);
 
     this.horseman = new Horseman(this.pixi);
     this.horseman.setup(this.width, this.height);
 
     this.skeleton = new Skeleton(this.pixi);
     this.skeleton.setup(this.width, this.height, this.horseman.getHorseDimensions());
+    this.skeleton.heads[0].dead = true;
+    this.skeleton.heads[0].deadCounted = true;
     this.gameContainer.addChild(this.horseman.container);
     this.gameContainer.addChild(this.skeleton.container);
 
@@ -77,58 +95,64 @@ export default class View2 extends PixiContainer {
         if (this.skeleton.getSkeletonKill(this.horseman.getFlailPosition())) {
           killCount++;
           this.killCountText.text = killCount;
-          if (killCount == neededKills) {
-            neededKills = (Math.floor(Math.random() * 3) + 1) * 10 + (Math.floor(Math.random() * 2) * 5);
-            killCount = 0;
-            start = false;
-            this.neededKillsText.text = "/" + neededKills;
-            this.killCountText.text = killCount;
-            this.props.onPress(true);
-          }
         }
       }
     }.bind(this))
 
-    this.txtBackground = new this.pixi.Graphics();
-    this.txtBackground.beginFill(0x404040);
-    this.txtBackground.lineStyle(2, 0xbbb9bc);
-    this.txtBackground.drawRect(0, 0, this.fakeText.width + 50, this.fakeText.height);
-    this.txtBackground.endFill();
-    this.alpha = 0.8;
-    this.txtBackground.x = this.width / 2 - this.txtBackground.width / 2;
-    this.txtBackground.y = this.killCountText.y - this.killCountText.height / 2;
-
-    this.gameContainer.addChild(this.txtBackground)
-    this.gameContainer.addChild(this.neededKillsText);
-    this.gameContainer.addChild(this.killCountText);
-    this.gameContainer.addChild(this.timerText);
+    this.gameContainer.addChild(this.message);
 
     this.scene.addChild(this.gameContainer);
   }
 
-  startCounter() {
-    timer = neededKills * 3 * 1000 + Date.now();
-    start = true;
-    if (this.horseman.getRotation() == Math.PI) {
-      this.horseman.setRotation(this.skeleton.getDistance());
-      this.skeleton.setSpeed();
-    }
+  onLifeLost() {
+    this.scene.parent.emit('livesNumChanged', -1);
+    TweenMax.to(this.horseman.container, .05, { alpha: .2, yoyo: true, repeat: 5 });
   }
 
-  countdown() {
-    if (start) {
-      var t = timer - Date.now();
-      t = Math.floor(t / 1000)
-      this.timerText.text = "Time left:  " + t + " sec";
-      if (t <= 0) {
-        neededKills = (Math.floor(Math.random() * 3) + 1) * 10 + (Math.floor(Math.random() * 2) * 5);
-        killCount = 0;
-        start = false;
-        this.neededKillsText.text = "/" + neededKills;
-        this.killCountText.text = killCount;
-        this.props.onPress(false);
-      }
-    }
+  showGameOver() {
+    this.isGameOn = false;
+    this.killsText.visible = false;
+
+    TweenMax.to([this.skeleton.container, this.horseman.flail].concat(this.horseman.flameTrail), 1, { alpha: 0 });
+    this.message.y += 20;
+    TweenMax.to(this.message, 1, { alpha: 1, y: "-=20", ease: Sine.easeInOut });
+
+    var obj = { gain: 1 };
+    TweenMax.to(obj, 3, {
+      gain: 0,
+      ease: Linear.easeNone,
+      onUpdate: function () {
+        // xSpeed = obj.gain * SKLT_SPEED_MAX;
+        this.horseman.setHorseSpeed(obj.gain * HRS_SPEED_MAX);
+      }.bind(this),
+      onComplete: function () {
+        setTimeout(this.onGameClose.bind(this), 2000);
+      }.bind(this)
+    });
+  }
+
+  onGameClose() {
+    console.log('Game Closed!');
+    /** 
+     * 
+     *    close game window or whatever ....
+     * 
+     */
+
+  }
+
+  startGame() {
+    var obj = { gain: 0 };
+    TweenMax.to(obj, BUILDUP_TIME, {
+      gain: 1,
+      ease: Linear.easeNone,
+      onUpdate: function () {
+        xSpeed = SKLT_SPEED_START + obj.gain * (SKLT_SPEED_MAX - SKLT_SPEED_START);
+        this.horseman.setHorseSpeed(HRS_SPEED_START + obj.gain * (HRS_SPEED_MAX - HRS_SPEED_START));
+      }.bind(this)
+    });
+    this.horseman.play();
+    this.isGameOn = true;
   }
 
   resize(w, h) {
@@ -144,9 +168,11 @@ export default class View2 extends PixiContainer {
   }
 
   update() {
-    this.horseman.animateFlail();
-    this.skeleton.animateSkeletons(this.horseman.getRotation());
-    this.countdown();
-    this.updated = true;
+    var speed = xSpeed;
+    // if (this.isGameOn) {
+    this.horseman.animateFlail(speed);
+    var numAlive = this.skeleton.animateSkeletons(speed);
+    if (this.isGameOn && numAlive > 0) this.onLifeLost();
+    // }
   }
 }

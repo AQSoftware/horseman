@@ -22,6 +22,7 @@ export default class Skeleton extends PixiContainer {
 
     this.flail = flail;
     this.xs = 0;
+    this.STEP = this.flail.height;
 
     this.container = new this.pixi.Container();
 
@@ -44,7 +45,7 @@ export default class Skeleton extends PixiContainer {
       this.scaleFactor = this.idle[i].height / this.idle[i].width;
       this.idle[i].width = this.scaleWidth / 4;
       this.idle[i].height = this.idle[i].width * this.scaleFactor;
-      this.idle[i].x = this.width / 2 - this.idle[i].width / 2 + (i * this.flail.height);
+      this.idle[i].x = this.width / 2 - this.idle[i].width / 2 + (i * this.STEP);
       this.idle[i].killable = true;
       this.container.addChild(this.idle[i]);
     }
@@ -69,6 +70,7 @@ export default class Skeleton extends PixiContainer {
       this.heads[i].height = this.idle[0].width * this.headScaleFactor;
       this.heads[i].x = this.idle[i].x;
       this.heads[i].dead = false;
+      this.heads[i].deadCounted = false;
       this.container.addChild(this.heads[i]);
     }
 
@@ -85,7 +87,12 @@ export default class Skeleton extends PixiContainer {
     this.xs = 0;
   }
 
-  animateSkeletons() {
+  animateSkeletons(speed) {
+    var numAlive = 0;
+
+    var realSpeed = this.STEP / (2 * Math.PI / speed);
+    this.xs = realSpeed;
+
     if (this.xs != 0) {
       for (var i in this.idle) {
         this.idle[i].x -= this.xs;
@@ -94,21 +101,36 @@ export default class Skeleton extends PixiContainer {
           this.heads[i].x = this.idle[i].x;
           this.heads[i].y = this.idle[i].y;
           this.heads[i].dead = false;
+          this.heads[i].deadCounted = false;
+          this.heads[i].alpha = 1;
           this.images[i].visible = false;
           this.idle[i].killable = true;
           this.idle[i].visible = true;
           this.lastX = i;
         }
         this.images[i].x = this.idle[i].x;
-        if (this.heads[i].dead) {
+        if (this.heads[i].dead && !this.heads[i].deadCounted) {
           this.heads[i].x += 10;
           this.heads[i].y -= 3;
         } else {
           this.heads[i].x = this.idle[i].x;
           this.images[i].x = this.idle[i].x;
         }
+
+        var head = this.heads[i];
+        if (
+          !head.dead
+          && !head.deadCounted
+          && head.x < (this.width / 2 - head.width / 2 - 20)
+        ) {
+          head.deadCounted = true;
+          // head.alpha = .2;
+          numAlive++;
+        }
       }
     }
+
+    return numAlive;
   }
 
   setSpeed() {

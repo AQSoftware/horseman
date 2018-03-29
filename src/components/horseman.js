@@ -92,16 +92,25 @@ export default class Horseman extends PixiContainer {
   }
 
   setIndex() {
-    this.rIndex = this.rotation;    
+    this.rIndex = this.rotation;
   }
 
   setRotation(distance) {
     this.setIndex();
+    this.play();
+  }
+
+  play() {
     this.horseman.play();
   }
 
-  animateFlail() {
-    this.flail.rotation -= this.rIndex;
+  setHorseSpeed(speed) {
+    this.horseman.animationSpeed = speed;
+  }
+
+  animateFlail(speed) {
+    // this.flail.rotation -= this.rIndex;
+    this.flail.rotation -= speed;
     this.stepCounter++;
     if (this.flail.rotation <= -Math.PI * 2) {
       this.flail.rotation = 0 + Math.PI * 2 + this.flail.rotation;

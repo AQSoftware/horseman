@@ -22,7 +22,7 @@ export default class View3 extends PixiContainer {
 
     var style = new PIXI.TextStyle({
       fontFamily: 'Arial',
-      fontSize: 50,
+      fontSize: 38,
       fill: '#ffffff',
     });
 
@@ -31,27 +31,26 @@ export default class View3 extends PixiContainer {
     this.horseman = new Horseman(this.pixi);
     this.horseman.setup(this.width, this.height);
 
-    this.skeleton = new Skeleton(this.pixi);
-    this.skeleton.setup(this.width, this.height, this.horseman.getHorseDimensions());
+    // this.skeleton = new Skeleton(this.pixi);
+    // this.skeleton.setup(this.width, this.height, this.horseman.getHorseDimensions());
 
     this.gameContainer.addChild(this.horseman.container);
-    this.gameContainer.addChild(this.skeleton.container);
+    // this.gameContainer.addChild(this.skeleton.container);
 
     this.message = new this.pixi.Text("", style);
     this.message.anchor.x = 0.5;
-    this.message.anchor.y = 0.5;
+    // this.message.anchor.y = 0.5;
     this.message.x = this.width / 2;
-    this.message.y = this.height / 2 - this.message.height;
+    this.message.y = this.height * .1;
 
     this.gameContainer.addChild(this.message);
 
     this.scene.addChild(this.gameContainer);
-    this.scene.addChild(this.button.scene);
+    // this.scene.addChild(this.button.scene);
   }
 
-  setMessage(state) {
-    if (state) this.message.text = "You did it!";
-    else this.message.text = "Time's up!";
+  setMessage(msg) {
+    this.message.text = msg;
   }
 
   resize(w, h) {

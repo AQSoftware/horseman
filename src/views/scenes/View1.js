@@ -35,7 +35,7 @@ export default class View1 extends PixiContainer {
 
     var style = new PIXI.TextStyle({
       fontFamily: 'Arial',
-      fontSize: 40,
+      fontSize: 22,
       fill: '#ffffff',
     });
 
@@ -43,7 +43,7 @@ export default class View1 extends PixiContainer {
     this.message.anchor.x = 0.5;
     this.message.anchor.y = 0.5;
     this.message.x = this.width / 2;
-    this.message.y = this.height / 2 - this.message.height;
+    this.message.y = this.height * .18;
 
     this.gameContainer.addChild(this.message);
 
@@ -68,13 +68,13 @@ export default class View1 extends PixiContainer {
     circle.x = this.skeleton.heads[0].x + 50;
     circle.y = this.skeleton.heads[0].y + 30;
     circle.alpha = .5;
-    TweenMax.to(circle, 1, { alpha: 1, pixi: { scaleX: 1.3, scaleY: 1.3 }, ease: Sine.easeInOut, yoyo: true, repeat: 10 });
+    TweenMax.to(circle, 1, { alpha: 1, pixi: { scaleX: 1.3, scaleY: 1.3 }, ease: Sine.easeInOut, yoyo: true, repeat: -1 });
   }
 
   update() {
     if (this.doAnimate) {
       var edgeNum = Math.PI + .25;
-      this.horseman.animateFlail();
+      this.horseman.animateFlail(.08);
       var r = Math.abs(this.horseman.getRotation() % (2 * Math.PI));
       if (Math.abs(r - edgeNum) < .1 && !this.didHit) {
         this.didHit = true;

@@ -4,6 +4,7 @@ import {
   BackgroundScene,
   View1, View2, View3
 } from './scenes';
+import LivesCount from '../components/LivesCount';
 
 const BACKGROUND_COLOR = 0x83b8a8;
 
@@ -31,16 +32,16 @@ export default class App {
     this.scenes.push({
       name: 'view2', scene: new View2(this.pixi, this.props.width, this.props.height, {
         ticker: this.tickCallback.bind(this),
-        onPress: this._onView2Click.bind(this),
+        // onPress: this._onView2Click.bind(this),
         dynamicAssetIndex: this.props.dynamicAssetIndex
       })
     });
-    this.scenes.push({
-      name: 'view3', scene: new View3(this.pixi, this.props.width, this.props.height, {
-        ticker: this.tickCallback,
-        onPress: this._onView3Click.bind(this)
-      })
-    });
+    // this.scenes.push({
+    //   name: 'view3', scene: new View3(this.pixi, this.props.width, this.props.height, {
+    //     // ticker: this.tickCallback,
+    //     // onPress: this._onView3Click.bind(this)
+    //   })
+    // });
     this.pixi.loader.add(ASSETS).load(this.load.bind(this));
     this.app.ticker.add(this._updateScene.bind(this));
   }
@@ -61,6 +62,21 @@ export default class App {
       this.scenes[i]['scene'].setup();
     }
     this._setPage(0);
+
+    const livesCount = new LivesCount(3);
+    livesCount.x = (this.props.width - 10);
+    livesCount.y = 10;
+    this.app.stage.addChild(livesCount);
+    this.livesCount = livesCount;
+    this.app.stage.on('livesNumChanged', this._onLivesNumChanged.bind(this));
+  }
+
+  _onLivesNumChanged(diff) {
+    this.livesCount.currentLives += diff;
+
+    if (this.livesCount.currentLives <= 0) {
+      this.showGameOver();
+    }
   }
 
   _setPage(page) {
@@ -71,7 +87,7 @@ export default class App {
     var view = this.scenes[page].scene;
     this.currentScene = view.scene;
     this.app.stage.addChild(this.currentScene);
-    if(view.activate) view.activate();
+    if (view.activate) view.activate();
   }
 
   _updateScene(delta) {
@@ -103,16 +119,17 @@ export default class App {
 
   _onView1Click() {
     this.scenes[0].scene.deactivate();// stop update ticks
-    this.scenes[1].scene.startCounter();
+    this.scenes[1].scene.startGame();
     this._setPage(1);
   }
 
   _onView2Click(state) {
-    this.scenes[2].scene.setMessage(state);
+    this.scenes[2].scene.setMessage("Game Over");
     this._setPage(2);
   }
 
-  _onView3Click() {
-    this._setPage(0);
+  showGameOver() {
+    this.livesCount.visible = false;
+    this.scenes[1].scene.showGameOver();
   }
 }
