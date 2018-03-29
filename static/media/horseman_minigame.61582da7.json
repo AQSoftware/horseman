@@ -1,0 +1,180 @@
+{"frames": {
+
+"horseman_flail.png":
+{
+	"frame": {"x":2003,"y":1,"w":41,"h":182},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":41,"h":182},
+	"sourceSize": {"w":41,"h":182}
+},
+"horseman_walk1.png":
+{
+	"frame": {"x":1,"y":1,"w":429,"h":398},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":429,"h":398},
+	"sourceSize": {"w":429,"h":398}
+},
+"horseman_walk2.png":
+{
+	"frame": {"x":432,"y":401,"w":429,"h":398},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":429,"h":398},
+	"sourceSize": {"w":429,"h":398}
+},
+"horseman_walk3.png":
+{
+	"frame": {"x":863,"y":401,"w":429,"h":398},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":429,"h":398},
+	"sourceSize": {"w":429,"h":398}
+},
+"horseman_walk4.png":
+{
+	"frame": {"x":1294,"y":401,"w":429,"h":398},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":429,"h":398},
+	"sourceSize": {"w":429,"h":398}
+},
+"horseman_walk5.png":
+{
+	"frame": {"x":432,"y":801,"w":429,"h":398},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":429,"h":398},
+	"sourceSize": {"w":429,"h":398}
+},
+"horseman_walk6.png":
+{
+	"frame": {"x":432,"y":1201,"w":429,"h":398},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":429,"h":398},
+	"sourceSize": {"w":429,"h":398}
+},
+"horseman_walk7.png":
+{
+	"frame": {"x":432,"y":1601,"w":429,"h":398},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":429,"h":398},
+	"sourceSize": {"w":429,"h":398}
+},
+"horseman_walk8.png":
+{
+	"frame": {"x":863,"y":801,"w":429,"h":398},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":429,"h":398},
+	"sourceSize": {"w":429,"h":398}
+},
+"horseman_walk9.png":
+{
+	"frame": {"x":1294,"y":801,"w":429,"h":398},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":429,"h":398},
+	"sourceSize": {"w":429,"h":398}
+},
+"horseman_walk10.png":
+{
+	"frame": {"x":432,"y":1,"w":429,"h":398},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":429,"h":398},
+	"sourceSize": {"w":429,"h":398}
+},
+"horseman_walk11.png":
+{
+	"frame": {"x":863,"y":1,"w":429,"h":398},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":429,"h":398},
+	"sourceSize": {"w":429,"h":398}
+},
+"horseman_walk12.png":
+{
+	"frame": {"x":1294,"y":1,"w":429,"h":398},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":429,"h":398},
+	"sourceSize": {"w":429,"h":398}
+},
+"horseman_walk13.png":
+{
+	"frame": {"x":1,"y":523,"w":429,"h":398},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":429,"h":398},
+	"sourceSize": {"w":429,"h":398}
+},
+"horseman_walk14.png":
+{
+	"frame": {"x":1,"y":923,"w":429,"h":398},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":429,"h":398},
+	"sourceSize": {"w":429,"h":398}
+},
+"horseman_walk15.png":
+{
+	"frame": {"x":1,"y":1323,"w":429,"h":398},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":429,"h":398},
+	"sourceSize": {"w":429,"h":398}
+},
+"skeleton_head.png":
+{
+	"frame": {"x":1725,"y":1,"w":137,"h":259},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":137,"h":259},
+	"sourceSize": {"w":137,"h":259}
+},
+"skeleton_hit1.png":
+{
+	"frame": {"x":1864,"y":1,"w":137,"h":259},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":137,"h":259},
+	"sourceSize": {"w":137,"h":259}
+},
+"skeleton_hit2.png":
+{
+	"frame": {"x":1725,"y":262,"w":137,"h":259},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":137,"h":259},
+	"sourceSize": {"w":137,"h":259}
+},
+"skeleton_hit3.png":
+{
+	"frame": {"x":1864,"y":1,"w":137,"h":259},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":137,"h":259},
+	"sourceSize": {"w":137,"h":259}
+},
+"skeleton_idle.png":
+{
+	"frame": {"x":1864,"y":262,"w":137,"h":259},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":137,"h":259},
+	"sourceSize": {"w":137,"h":259}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "horseman_minigame.png",
+	"format": "RGBA8888",
+	"size": {"w":2048,"h":2048},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:a70c4901e177b3bf08d0a5f472c2064d:fcdc580bfc1e5a1ce1c65bac76468b65:edfe4d2ab18ea9c9b0684643e22bf984$"
+}
+}
