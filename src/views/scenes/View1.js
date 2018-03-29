@@ -43,7 +43,7 @@ export default class View1 extends PixiContainer {
     this.message.anchor.x = 0.5;
     this.message.anchor.y = 0.5;
     this.message.x = this.width / 2;
-    this.message.y = this.height * .18;
+    this.message.y = this.horseman.horseman.y + this.horseman.horseman.height * .05;
 
     this.gameContainer.addChild(this.message);
 
@@ -62,13 +62,15 @@ export default class View1 extends PixiContainer {
     this.didHit = false;
     this.doAnimate = true;
 
+    var head = this.skeleton.heads[0];
+
     var circle = this.circle;
-    circle.scale.x = circle.scale.y = .7;
+    circle.scale.x = circle.scale.y = head.width / circle.width * .6;
     circle.anchor.set(.5, .5);
-    circle.x = this.skeleton.heads[0].x + 50;
-    circle.y = this.skeleton.heads[0].y + 30;
+    circle.x = head.x + head.width / 2;
+    circle.y = head.y + head.height / 6;
     circle.alpha = .5;
-    TweenMax.to(circle, 1, { alpha: 1, pixi: { scaleX: 1.3, scaleY: 1.3 }, ease: Sine.easeInOut, yoyo: true, repeat: -1 });
+    TweenMax.to(circle, 1, { alpha: 1, pixi: { scaleX: circle.scale.x * 1.3, scaleY: circle.scale.x * 1.3 }, ease: Sine.easeInOut, yoyo: true, repeat: -1 });
   }
 
   update() {

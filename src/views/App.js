@@ -66,6 +66,7 @@ export default class App {
     const livesCount = new LivesCount(3);
     livesCount.x = (this.props.width - 10);
     livesCount.y = 10;
+    livesCount.alpha = 0;    
     this.app.stage.addChild(livesCount);
     this.livesCount = livesCount;
     this.app.stage.on('livesNumChanged', this._onLivesNumChanged.bind(this));
@@ -120,6 +121,7 @@ export default class App {
   _onView1Click() {
     this.scenes[0].scene.deactivate();// stop update ticks
     this.scenes[1].scene.startGame();
+    this.livesCount.alpha = 1;    
     this._setPage(1);
   }
 

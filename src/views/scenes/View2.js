@@ -92,6 +92,7 @@ export default class View2 extends PixiContainer {
 
     this.scene.on('pointerdown', function () {
       if (this.horseman.getRotation() < -2.7 && this.horseman.getRotation() > -3.3) {
+        // console.log('DOWN @ ' + this.horseman.getRotation());
         if (this.skeleton.getSkeletonKill(this.horseman.getFlailPosition())) {
           killCount++;
           this.killCountText.text = killCount;
@@ -168,11 +169,18 @@ export default class View2 extends PixiContainer {
   }
 
   update() {
-    var speed = xSpeed;
     // if (this.isGameOn) {
+    var speed = xSpeed;
     this.horseman.animateFlail(speed);
     var numAlive = this.skeleton.animateSkeletons(speed);
     if (this.isGameOn && numAlive > 0) this.onLifeLost();
+
+    // if (this.horseman.getRotation() < -2.7 && this.horseman.getRotation() > -3.3) {
+    //   this.horseman.flail.alpha = .1;
+    // } else {
+    //   this.horseman.flail.alpha = 1;
+    // }
+
     // }
   }
 }
