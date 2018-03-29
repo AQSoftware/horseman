@@ -1,24 +1,24 @@
 
 /**
-HexiGroup - Base class for creating Hexi/Pixi groups
+PixiContainer - Base class for creating Pixi containers
 */
-export default class HexiGroup {
+export default class PixiContainer {
 
 
   /**
   Constructor
 
-  hexi        - Hexi instance
+  pixi     - Pixi instance
   width    - Group width
   height   - Group height
   props    - Additional props
   */
-  constructor(hexi, width, height, props){
-    this.hexi = hexi;
-    this.props = props;
+  constructor(pixi, width, height, props){
+    this.pixi = pixi;
     this.width = width;
     this.height = height;
-    this.scene = hexi.group();
+    this.props = props;
+    this.scene = new pixi.Container();
   }
 
   /**
@@ -26,11 +26,11 @@ export default class HexiGroup {
   for enabling/disabling Hexi buttons. See HexiButton.enabled
   */
   get enabled(){
-    return this.scene.enabled;
+    return this.scene.interactive;
   }
 
   set enabled(value){
-    this.scene.enabled = value;
+    this.scene.interactive = value;
   }
 
   /**

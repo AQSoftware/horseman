@@ -1,71 +1,71 @@
 // @flow
 import Assets, { ASSETS, DYNAMIC_ASSETS } from '../assets';
-import HexiGroup from '../components/HexiGroup';
+import PixiContainer from '../components/PixiContainer';
 import {
   BackgroundScene,
   View1, View2, View3
 } from './scenes';
 
-const BACKGROUND_COLOR = 0x0;
+const BACKGROUND_COLOR = 0x83b8a8;
 
 type Props = {
   width: number,
   height: number,
-  fps: number,
-  dynamicAssetIndex: number
+  dynamicAssetIndex: number,
+  ticker: tickCallback
+  /*fps: number,*/
 }
 
 export default class View {
 
-  hexi: any;
-  scenes: Array<HexiGroup>;
+  pixi: any;
+  scenes: Array<PixiContainer>;
   pageNumber: number;
-  backgroundScene: HexiGroup;
-  currentScene: ?HexiGroup;
+  backgroundScene: PixiContainer;
+  currentScene: ?PixiContainer;
 
   constructor(props: Props){
-    // Build array of assets to be used. Merge common assets with
-    // one of the dynamic assets, specified by props.dynamicAssetIndex
-    const thingsToLoad = ASSETS.concat([DYNAMIC_ASSETS[props.dynamicAssetIndex]]);
-
-    this.hexi = window.hexi(props.width, props.height, this.setup.bind(this), thingsToLoad, this.load.bind(this));
-    this.hexi.fps = props.fps;
-    this.hexi.backgroundColor = BACKGROUND_COLOR;
-    this.hexi.scaleToWindow();
-
-    this.scenes = [];
-    // Instantiate background scene
-    this.backgroundScene = new BackgroundScene(this.hexi, props.width, props.height);
-
-    // Instantiate view scenes
-    this.scenes.push({name: 'view1', scene: new View1(this.hexi, props.width, props.height, {
-      onPress: this._onView1Click.bind(this)
-    })});
-    this.scenes.push({name: 'view2', scene: new View2(this.hexi, props.width, props.height, {
-      onPress: this._onView2Click.bind(this),
-      dynamicAssetIndex: props.dynamicAssetIndex
-    })});
-    this.scenes.push({name: 'view3', scene: new View3(this.hexi, props.width, props.height, {
-      onPress: this._onView3Click.bind(this)
-    })});
+    this.props = props;
+    this.pixi = window.PIXI;
+    //this.renderer = this.pixi.autoDetectRenderer();
+    this.app = new this.pixi.Application(props.width, props.height, {backgroundColor : BACKGROUND_COLOR, autoResize: true});
+    this.app.speed = 0.5;
+    document.body.appendChild(this.app.view);
+    window.onresize = this.resize.bind(this);
+    //console.log(this.app.renderer);
   }
 
-  start() {
-    this.hexi.start();
+  init() {
+    this.scenes = [];
+    this.scenes.push({name: 'view1', scene: new View1(this.pixi, this.props.width, this.props.height, {
+      ticker: this.tickCallback,
+      onPress: this._onView1Click.bind(this)
+    })});
+    this.scenes.push({name: 'view2', scene: new View2(this.pixi, this.props.width, this.props.height, {
+      ticker: this.tickCallback.bind(this),
+      onPress: this._onView2Click.bind(this),
+      dynamicAssetIndex: this.props.dynamicAssetIndex
+    })});
+    this.scenes.push({name: 'view3', scene: new View3(this.pixi, this.props.width, this.props.height, {
+      ticker: this.tickCallback,
+      onPress: this._onView3Click.bind(this)
+    })});
+    this.pixi.loader.add(ASSETS).load(this.load.bind(this));
+    this.app.ticker.add(this._updateScene.bind(this));
   }
 
   /**
   Loading function to load assets
   */
   load(){
-    this.hexi.loadingBar();
+    this.setup();
   }
 
   /**
   Setup function to setup scenes
   */
   setup(){
-    this.backgroundScene.setup();
+    
     for(let i = 0; i < this.scenes.length; i++){
       this.scenes[i]['scene'].setup();
     }
@@ -74,21 +74,47 @@ export default class View {
 
   _setPage(page: number){
     this.pageNumber = page;
-    this._updateScene();
+    if(this.currentScene){
+      this.app.stage.removeChild(this.currentScene);
+    }
+    this.currentScene = this.scenes[page].scene.scene;
+    this.app.stage.addChild(this.currentScene);
   }
 
-  _updateScene(){
+  _updateScene(delta){
+    /*
+      update either current scene from here (tick/gameTick/frameUpdate), or all scenes at once
+      example:
+        if(this.currentScene){
+          this.currentScene.update();
+        }
+    */
+    if(this.scenes[this.pageNumber] && this.scenes[this.pageNumber].scene.update){
+      this.scenes[this.pageNumber].scene.update();
+    }
+  }
+
+  tickCallback(tickObject){
+    this.app.ticker.add(tickObject);
+  }
+
+  resize(){
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
+    this.app.renderer.resize(this.width, this.height);
     for(let i = 0; i < this.scenes.length; i++){
-      this.scenes[i]['scene'].scene.visible = i === this.pageNumber;
-      this.scenes[i]['scene'].enabled = i === this.pageNumber;
+      if(this.scenes[i]['scene'].resize)
+      this.scenes[i]['scene'].resize(this.width, this.height);
     }
   }
 
   _onView1Click(){
+    this.scenes[1].scene.startCounter();
     this._setPage(1);
   }
 
-  _onView2Click(){
+  _onView2Click(state){
+    this.scenes[2].scene.setMessage(state);
     this._setPage(2);
   }
 

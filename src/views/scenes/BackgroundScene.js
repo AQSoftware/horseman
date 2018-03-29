@@ -1,13 +1,13 @@
-import { HexiGroup } from '../../components';
+import { PixiContainer } from '../../components';
 import Assets from '../../assets';
 
-export default class BackgroundScene extends HexiGroup {
+export default class BackgroundScene extends PixiContainer {
 
   setup(){
-    this.background = this.hexi.sprite(Assets.images.background);
+    this.background = new this.pixi.Graphics(this.pixi.utils.TextureCache[Assets.images.background]);
     this.background.width = this.width;
     this.background.height = this.height;
-    this.background.setPosition(0,0);
+    this.background.position = new this.pixi.Point(0,0);
     this.scene.addChild(this.background);
   }
 }
