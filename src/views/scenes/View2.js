@@ -1,4 +1,6 @@
 import { PixiContainer, PixiButton, Horseman, Skeleton } from '../../components';
+import Assets, { ASSETS } from '../../assets';
+import PIXIsound from 'pixi-sound';
 
 const VERTICAL_OFFSET = 20;
 const BUTTON_WIDTH = 227;
@@ -110,6 +112,7 @@ export default class View2 extends PixiContainer {
         if (this.skeleton.getSkeletonKill(this.horseman.getFlailPosition())) {
           killCount++;
           this.killCountText.text = killCount;
+          PIXI.sound.play(Assets.sounds.sndHit);
         }
       }
     }.bind(this))
@@ -122,6 +125,7 @@ export default class View2 extends PixiContainer {
   onLifeLost() {
     this.scene.parent.emit('livesNumChanged', -1);
     TweenMax.to(this.horseman.container, .05, { alpha: .2, yoyo: true, repeat: 5 });
+    PIXI.sound.play(Assets.sounds.sndClick);    
   }
 
   showGameOver() {
@@ -144,6 +148,9 @@ export default class View2 extends PixiContainer {
         setTimeout(this.onGameClose.bind(this), 2000);
       }.bind(this)
     });
+
+    PIXI.sound.stopAll();
+    PIXI.sound.play(Assets.sounds.sndFinal);
   }
 
   onGameClose() {

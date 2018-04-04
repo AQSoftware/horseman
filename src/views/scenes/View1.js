@@ -3,6 +3,7 @@ import Assets from '../../assets';
 
 import TweenMax from '../../libs/gsap/TweenMax.min';
 import PixiPlugin from '../../libs/gsap/plugins/PixiPlugin.min';
+import PIXIsound from 'pixi-sound';
 
 const VERTICAL_OFFSET = 20;
 const BUTTON_WIDTH = 227;
@@ -106,6 +107,7 @@ export default class View1 extends PixiContainer {
 
   activate() {
     this.startAnimation();
+    PIXI.sound.play(Assets.sounds.sndBackground, { loop: true });
   }
 
   deactivate() {
