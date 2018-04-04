@@ -75,7 +75,7 @@ export default class View1 extends PixiContainer {
 
   update() {
     if (this.doAnimate) {
-      var edgeNum = Math.PI + .25;
+      var edgeNum = Math.PI + .05;
       this.horseman.animateFlail(.08);
       var r = Math.abs(this.horseman.getRotation() % (2 * Math.PI));
       if (Math.abs(r - edgeNum) < .1 && !this.didHit) {

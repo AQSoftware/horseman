@@ -4,6 +4,11 @@ const VERTICAL_OFFSET = 20;
 const BUTTON_WIDTH = 227;
 const BUTTON_HEIGHT = 69;
 
+const ANGLE_FROM = -3.2;
+const ANGLE_TO = -2.7;
+
+const MIN_TAP_DELAY = 300;
+
 var timer = 0;
 var start = false;
 var killCount = 0;
@@ -91,7 +96,16 @@ export default class View2 extends PixiContainer {
     this.gameContainer.addChild(this.skeleton.container);
 
     this.scene.on('pointerdown', function () {
-      if (this.horseman.getRotation() < -2.7 && this.horseman.getRotation() > -3.3) {
+      this.didTap = true;
+
+      var tapTime = new Date().getTime();
+      if ((tapTime - this.lastTapTime) < MIN_TAP_DELAY) {
+        return;
+      } else {
+        this.lastTapTime = tapTime;
+      }
+
+      if (this.horseman.getRotation() > ANGLE_FROM && this.horseman.getRotation() < ANGLE_TO) {
         // console.log('DOWN @ ' + this.horseman.getRotation());
         if (this.skeleton.getSkeletonKill(this.horseman.getFlailPosition())) {
           killCount++;
@@ -154,6 +168,7 @@ export default class View2 extends PixiContainer {
     });
     this.horseman.play();
     this.isGameOn = true;
+    this.lastTapTime = new Date().getTime();
   }
 
   resize(w, h) {
@@ -169,18 +184,22 @@ export default class View2 extends PixiContainer {
   }
 
   update() {
-    // if (this.isGameOn) {
     var speed = xSpeed;
     this.horseman.animateFlail(speed);
     var numAlive = this.skeleton.animateSkeletons(speed);
-    if (this.isGameOn && numAlive > 0) this.onLifeLost();
+
+    if (this.isGameOn && numAlive > 0) {
+
+      if (this.didTap) {
+        this.onLifeLost();
+        this.didTap = false;
+      }
+    }
 
     // if (this.horseman.getRotation() < -2.7 && this.horseman.getRotation() > -3.3) {
     //   this.horseman.flail.alpha = .1;
     // } else {
     //   this.horseman.flail.alpha = 1;
-    // }
-
     // }
   }
 }

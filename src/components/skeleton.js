@@ -3,7 +3,7 @@ import PixiContainer from './PixiContainer';
 import TweenMax from '../libs/gsap/TweenMax.min';
 import PixiPlugin from '../libs/gsap/plugins/PixiPlugin.min';
 
-const KILL_RANGE = 200;// was 65
+const KILL_RANGE = 100;// was 65
 
 export default class Skeleton extends PixiContainer {
   setup(width, height, flail) {
@@ -66,6 +66,11 @@ export default class Skeleton extends PixiContainer {
 
     for (var i = 0; i < this.numberOfSkeletons; i++) {
       this.heads[i] = new this.pixi.Sprite(this.pixi.utils.TextureCache["skeleton_head.png"]);
+      // var bg = new PIXI.Graphics();
+      // bg.beginFill(0xff0000, .3);
+      // bg.drawRect(0,0,137, 137);
+      // bg.endFill();
+      // this.heads[i].addChildAt(bg, 0);
       this.headScaleFactor = this.heads[i].height / this.heads[i].width;
       var hScale = this.skeletonWidth / this.heads[i].width;
       this.heads[i].width = this.idle[0].width * hScale;
