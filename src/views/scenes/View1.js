@@ -120,7 +120,7 @@ export default class View1 extends PixiContainer {
 
   activate() {
     this.startAnimation();
-    // PIXI.sound.play(Assets.sounds.sndBackground, { loop: true });
+    PIXI.sound.play(Assets.sounds.sndBackground, { loop: true });
   }
 
   deactivate() {
