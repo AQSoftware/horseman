@@ -1,13 +1,14 @@
 import { PixiContainer, PixiButton, Horseman, Skeleton } from '../../components';
 import Assets, { ASSETS } from '../../assets';
 import PIXIsound from 'pixi-sound';
+import { normalizeRadians } from '../../libs/Utils';
 
 const VERTICAL_OFFSET = 20;
 const BUTTON_WIDTH = 227;
 const BUTTON_HEIGHT = 69;
 
-const ANGLE_FROM = -3.2;
-const ANGLE_TO = -2.7;
+var ANGLE_FROM = -3.2;
+var ANGLE_TO = -2.7;
 
 const MIN_TAP_DELAY = 300;
 
@@ -18,12 +19,15 @@ var killCount = 0;
 const BUILDUP_TIME = 7;// 7 sec speed buildup
 const SKLT_SPEED_START = 0.01;
 const SKLT_SPEED_MAX = 0.1;
+// const SKLT_SPEED_MAX = 0.05;
 const HRS_SPEED_START = 0.01;
 const HRS_SPEED_MAX = 0.2;
-var xSpeed = 0.1;
+var xSpeed;
 
 export default class View2 extends PixiContainer {
   setup() {
+    ANGLE_FROM = this.props.allowHitFrom;
+    ANGLE_TO = this.props.allowHitTo;
 
     setTimeout(this.resize.bind(this), 200, this.width, this.height);
 
@@ -107,13 +111,16 @@ export default class View2 extends PixiContainer {
         this.lastTapTime = tapTime;
       }
 
-      if (this.horseman.getRotation() > ANGLE_FROM && this.horseman.getRotation() < ANGLE_TO) {
-        // console.log('DOWN @ ' + this.horseman.getRotation());
-        if (this.skeleton.getSkeletonKill(this.horseman.getFlailPosition())) {
-          killCount++;
-          this.killCountText.text = killCount;
-          PIXI.sound.play(Assets.sounds.sndHit);
-        }
+      var r = normalizeRadians(this.horseman.getRotation());
+      if (r < ANGLE_FROM && r > ANGLE_TO) {
+        console.log('DOWN @ ' + this.horseman.getRotation());
+        this.hitAccepted = true;
+        this.didTap = false;
+        // if (this.skeleton.getSkeletonKill(this.horseman.getFlailPosition())) {
+        //   killCount++;
+        //   this.killCountText.text = killCount;
+        //   PIXI.sound.play(Assets.sounds.sndHit);
+        // }            
       }
     }.bind(this))
 
@@ -125,7 +132,7 @@ export default class View2 extends PixiContainer {
   onLifeLost() {
     this.scene.parent.emit('livesNumChanged', -1);
     TweenMax.to(this.horseman.container, .05, { alpha: .2, yoyo: true, repeat: 5 });
-    PIXI.sound.play(Assets.sounds.sndClick);    
+    PIXI.sound.play(Assets.sounds.sndClick);
   }
 
   showGameOver() {
@@ -203,7 +210,20 @@ export default class View2 extends PixiContainer {
       }
     }
 
-    // if (this.horseman.getRotation() < -2.7 && this.horseman.getRotation() > -3.3) {
+    if (this.hitAccepted) {
+      var index = this.skeleton.getKillRangeIndex(this.horseman.getFlailPosition());
+      console.log('!!! ' + index);
+      if (index >= 0) {
+        this.hitAccepted = false;
+        this.skeleton.performKill(index);
+        killCount++;
+        this.killCountText.text = killCount;
+        PIXI.sound.play(Assets.sounds.sndHit);
+      }
+    }
+
+    // var r = normalizeRadians(this.horseman.getRotation());
+    // if (r < ANGLE_FROM && r > ANGLE_TO) {
     //   this.horseman.flail.alpha = .1;
     // } else {
     //   this.horseman.flail.alpha = 1;

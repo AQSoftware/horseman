@@ -5,6 +5,7 @@ import {
   View1, View2, View3
 } from './scenes';
 import LivesCount from '../components/LivesCount';
+import { normalizeRadians } from '../libs/Utils';
 
 const BACKGROUND_COLOR = 0x83b8a8;
 
@@ -22,18 +23,32 @@ export default class App {
   }
 
   init() {
+    var hitAngleFrom = this.props.allowHitFrom / 180 * Math.PI;
+    var hitAngleTo = this.props.allowHitTo / 180 * Math.PI;
+
+    // normalize with horseman.getRotation() return value (zero is at 90° not at 0°)
+    hitAngleFrom += Math.PI / 2;
+    hitAngleTo += Math.PI / 2;
+
+    hitAngleFrom = normalizeRadians(hitAngleFrom);
+    hitAngleTo = normalizeRadians(hitAngleTo);
+    
     this.scenes = [];
     this.scenes.push({
       name: 'view1', scene: new View1(this.pixi, this.props.width, this.props.height, {
         ticker: this.tickCallback,
-        onPress: this._onView1Click.bind(this)
+        onPress: this._onView1Click.bind(this),
+        allowHitFrom: hitAngleFrom,
+        allowHitTo: hitAngleTo
       })
     });
     this.scenes.push({
       name: 'view2', scene: new View2(this.pixi, this.props.width, this.props.height, {
         ticker: this.tickCallback.bind(this),
         // onPress: this._onView2Click.bind(this),
-        dynamicAssetIndex: this.props.dynamicAssetIndex
+        dynamicAssetIndex: this.props.dynamicAssetIndex,
+        allowHitFrom: hitAngleFrom,
+        allowHitTo: hitAngleTo
       })
     });
     // this.scenes.push({

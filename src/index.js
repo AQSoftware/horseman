@@ -16,7 +16,9 @@ const DYNAMIC_ASSET_INDEX = Math.floor(Math.random() * 3);
 const props = {
   width: GAME_WIDTH,
   height: GAME_HEIGHT,
-  dynamicAssetIndex: DYNAMIC_ASSET_INDEX
+  dynamicAssetIndex: DYNAMIC_ASSET_INDEX,
+  allowHitFrom: 180,
+  allowHitTo: 90
   /*fps: FPS*/
 };
 

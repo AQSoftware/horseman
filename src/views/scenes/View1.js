@@ -1,5 +1,6 @@
 import { PixiContainer, PixiButton, Horseman, Skeleton } from '../../components';
 import Assets from '../../assets';
+import { normalizeRadians } from '../../libs/Utils';
 
 import TweenMax from '../../libs/gsap/TweenMax.min';
 import PixiPlugin from '../../libs/gsap/plugins/PixiPlugin.min';
@@ -61,6 +62,7 @@ export default class View1 extends PixiContainer {
   startAnimation() {
     this.horseman.setIndex();
     this.didHit = false;
+    this.didShowHit = false;    
     this.doAnimate = true;
 
     var head = this.skeleton.heads[0];
@@ -71,15 +73,16 @@ export default class View1 extends PixiContainer {
     circle.x = head.x + head.width / 2;
     circle.y = head.y + head.height / 6;
     circle.alpha = .5;
-    TweenMax.to(circle, 1, { alpha: 1, pixi: { scaleX: circle.scale.x * 1.3, scaleY: circle.scale.x * 1.3 }, ease: Sine.easeInOut, yoyo: true, repeat: -1 });
   }
 
   update() {
     if (this.doAnimate) {
-      var edgeNum = Math.PI + .05;
       this.horseman.animateFlail(.08);
-      var r = Math.abs(this.horseman.getRotation() % (2 * Math.PI));
-      if (Math.abs(r - edgeNum) < .1 && !this.didHit) {
+
+      var r = normalizeRadians(this.horseman.getRotation());
+
+      var edgeSkull = Math.PI * .95;// 'almost' Math.PI
+      if (Math.abs(edgeSkull - r) < .1 && !this.didHit) {
         this.didHit = true;
         this.skeleton.killAt(0);
 
@@ -88,6 +91,16 @@ export default class View1 extends PixiContainer {
           this.didHit = false;
         }.bind(this), 600);
       }
+
+      if (r < this.props.allowHitFrom && !this.didShowHit) {
+        this.didShowHit = true;
+        this.circle.alpha = 1;
+      }
+      if (r < this.props.allowHitTo && this.didShowHit) {
+        this.didShowHit = false;
+        this.circle.alpha = .5;
+      }
+
     }
   }
 
@@ -107,7 +120,7 @@ export default class View1 extends PixiContainer {
 
   activate() {
     this.startAnimation();
-    PIXI.sound.play(Assets.sounds.sndBackground, { loop: true });
+    // PIXI.sound.play(Assets.sounds.sndBackground, { loop: true });
   }
 
   deactivate() {

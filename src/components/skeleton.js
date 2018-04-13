@@ -4,6 +4,7 @@ import TweenMax from '../libs/gsap/TweenMax.min';
 import PixiPlugin from '../libs/gsap/plugins/PixiPlugin.min';
 
 const KILL_RANGE = 100;// was 65
+const KILL_RANGE_CLOSE = 40;
 
 export default class Skeleton extends PixiContainer {
   setup(width, height, flail) {
@@ -158,6 +159,29 @@ export default class Skeleton extends PixiContainer {
       }
     }
     return false;
+  }
+
+  getKillRangeIndex(flailPos) {
+    var horseman = { x: flailPos.x, y: flailPos.y };
+    for (var i in this.idle) {
+      var skeletonPos = {
+        x: this.heads[i].x + this.heads[i].width / 2,
+        y: this.heads[i].y + this.heads[i].width / 2
+      };
+      if (this.inRange(horseman, skeletonPos, KILL_RANGE_CLOSE) && this.idle[i].killable) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  performKill(i) {
+    console.log("Killed " + i);
+    this.idle[i].killable = false;
+    this.idle[i].visible = false;
+    this.images[i].visible = true;
+    this.images[i].play();
+    this.heads[i].dead = true;
   }
 
   getDistance() {
