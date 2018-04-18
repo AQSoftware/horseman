@@ -98,7 +98,7 @@ export default class View1 extends PixiContainer {
       }
       if (r < this.props.allowHitTo && this.didShowHit) {
         this.didShowHit = false;
-        this.circle.alpha = .5;
+        this.circle.alpha = 0;
       }
 
     }
