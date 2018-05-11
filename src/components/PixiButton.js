@@ -1,4 +1,3 @@
-// @flow
 import PixiContainer from './PixiContainer';
 
 export default class PixiButton extends PixiContainer {

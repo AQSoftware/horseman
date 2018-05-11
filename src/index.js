@@ -1,26 +1,35 @@
-import App from './views/App';
+// @flow
+import MiniApp from './components/MiniApp';
+import HorsemanGame from './HorsemanGame';
 
-// const GAME_WIDTH = 528;
-// const GAME_HEIGHT = 939;
+const GAME_WIDTH = window.innerWidth;
+const GAME_HEIGHT = window.innerHeight;
+const DEVT = true;
 
-const GAME_WIDTH = window.innerWidth;// * RESOLUTION_SCALE;
-const GAME_HEIGHT = window.innerHeight;// * RESOLUTION_SCALE;
-const DYNAMIC_ASSET_INDEX = 0;
-
-/*
-const RESOLUTION_SCALE = 1.5;
-const FPS = 30;
-
-const DYNAMIC_ASSET_INDEX = Math.floor(Math.random() * 3);
-*/
-const props = {
+/**
+ * shouldWin - Tells the MiniApp to force the current game iteration to win
+ * winImage - Optional. Image URL of item won. Only present if shouldWin is true.
+ * source - User info of current user playing the MiniApp
+ * engagementSource - User info of user who created the instance of the MiniApp
+ * additionalInfo - Data specific to the MiniApp.
+ */
+let data = {
+  shouldWin: false,
+  winImage: "https://s3.amazonaws.com/famers/720/F1040881145111POSYEB.png",
+  additionalInfo: {
+    background: "https://s3.amazonaws.com/famers/720/F1040881145112DFY3HK.jpg"
+  },
   width: GAME_WIDTH,
   height: GAME_HEIGHT,
-  dynamicAssetIndex: DYNAMIC_ASSET_INDEX,
   allowHitFrom: 180,
-  allowHitTo: 90
-  /*fps: FPS*/
-};
+  allowHitTo: 90    
+} 
 
-const app = new App(props);
-app.init();
+const miniApp = new MiniApp({
+  width: GAME_WIDTH,
+  height: GAME_HEIGHT,
+  game: HorsemanGame,
+  devt: DEVT,
+  data: data
+});
+
