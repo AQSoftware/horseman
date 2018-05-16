@@ -20,10 +20,11 @@ export default class View1 extends PixiContainer {
       onPress: this.props.onPress
     });
     this.button.setup();
+    this.button.scene.scale.set(0.5);    
     this.button.scene.position = new PIXI.Point(
-      (this.width - BUTTON_WIDTH) / 2.0,
-      (this.height - BUTTON_HEIGHT) - VERTICAL_OFFSET
-    )
+      (this.width - this.button.scene.width) / 2.0,
+      (this.height - this.button.scene.height) - VERTICAL_OFFSET
+    );
     this.gameContainer = new PIXI.Container();
 
     this.horseman = new Horseman(this.pixi);
