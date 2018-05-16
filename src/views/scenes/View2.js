@@ -26,6 +26,8 @@ var xSpeed;
 
 export default class View2 extends PixiContainer {
   setup() {
+    killCount = 0;
+    
     ANGLE_FROM = this.props.allowHitFrom;
     ANGLE_TO = this.props.allowHitTo;
 
