@@ -179,6 +179,8 @@ export default class HorsemanGame extends Game<Props> {
     this.scenes[1].scene.showGameOver();
 
     // Inform the host app that our mini app has ended
-    defaultLifeCycle.end();    
+    defaultLifeCycle.join(null, this.props.additionalInfo.background, true, null);
+    setTimeout(() => defaultLifeCycle.end(), 3000);
+    
   }  
 }
