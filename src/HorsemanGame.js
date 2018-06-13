@@ -197,6 +197,9 @@ export default class HorsemanGame extends Game<Props> {
     this.livesCount.visible = false;
     this.scenes[1].scene.showGameOver();
 
+    var score = this.scenes[1].scene.killCount;
+    // pass score
+    if(defaultLifeCycle.setResult) defaultLifeCycle.setResult(score);
     // Inform the host app that our mini app has ended
     defaultLifeCycle.end();
   }
