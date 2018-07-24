@@ -14,7 +14,7 @@ const MIN_TAP_DELAY = 300;
 
 var timer = 0;
 var start = false;
-var killCount = 0;
+var _killCount = 0;
 
 const BUILDUP_TIME = 7;// 7 sec speed buildup
 const SKLT_SPEED_START = 0.01;
@@ -26,6 +26,8 @@ var xSpeed;
 
 export default class View2 extends PixiContainer {
   setup() {
+    _killCount = 0;
+    
     ANGLE_FROM = this.props.allowHitFrom;
     ANGLE_TO = this.props.allowHitTo;
 
@@ -216,8 +218,8 @@ export default class View2 extends PixiContainer {
       if (index >= 0) {
         this.hitAccepted = false;
         this.skeleton.performKill(index);
-        killCount++;
-        this.killCountText.text = killCount;
+        _killCount++;
+        this.killCountText.text = _killCount;
         PIXI.sound.play(Assets.sounds.sndHit);
       }
     }
@@ -228,5 +230,9 @@ export default class View2 extends PixiContainer {
     // } else {
     //   this.horseman.flail.alpha = 1;
     // }
+  }
+
+  get killCount() {
+    return _killCount;
   }
 }

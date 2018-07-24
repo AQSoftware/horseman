@@ -7,6 +7,7 @@ import {
 
 
 import * as PixiContainer from './components/PixiContainer';
+import { PixiButton } from './components';
 import {
   BackgroundScene,
   View1, View2, View3
@@ -15,6 +16,9 @@ import LivesCount from './components/LivesCount';
 import { normalizeRadians } from './libs/Utils';
 
 const BACKGROUND_COLOR = 0x83b8a8;
+const DEFAULT_LIVES_COUNT = 3;
+const END_DELAY = 1000;
+const JOIN_IMAGE = "https://s3.amazonaws.com/famers/720/F1164587631963X5VS1C.jpg";
 
 const PIXI = window.PIXI;
 
@@ -25,7 +29,7 @@ type Props = {
   width: number,
   height: number,
   allowHitFrom: number,
-  allowHitTo: number  
+  allowHitTo: number
 }
 
 export default class HorsemanGame extends Game<Props> {
@@ -53,19 +57,22 @@ export default class HorsemanGame extends Game<Props> {
     bg.height = this.app.renderer.height;
     this.app.stage.addChild(bg);
 
-    this.construct();
-    this.init();
+    this._initEvents();
+    this.reset();
 
     // Inform the host app that we are ready to be displayed
-    defaultLifeCycle.informReady();    
+    defaultLifeCycle.informReady();
   }
 
-  construct() {
-    this.app.speed = 0.5;
+  _initEvents() {
+    this.app.ticker.add(this._updateScene.bind(this));
+    this.app.stage.on('livesNumChanged', this._onLivesNumChanged.bind(this));
     window.onresize = this.resize.bind(this);
   }
 
   init() {
+    this.app.speed = 0.5;
+
     var hitAngleFrom = this.props.allowHitFrom / 180 * Math.PI;
     var hitAngleTo = this.props.allowHitTo / 180 * Math.PI;
 
@@ -75,7 +82,7 @@ export default class HorsemanGame extends Game<Props> {
 
     hitAngleFrom = normalizeRadians(hitAngleFrom);
     hitAngleTo = normalizeRadians(hitAngleTo);
-    
+
     this.scenes = [];
     this.scenes.push({
       name: 'view1', scene: new View1(PIXI, this.props.width, this.props.height, {
@@ -93,7 +100,6 @@ export default class HorsemanGame extends Game<Props> {
         allowHitTo: hitAngleTo
       })
     });
-    this.app.ticker.add(this._updateScene.bind(this));
     this.setup();
   }
 
@@ -107,13 +113,28 @@ export default class HorsemanGame extends Game<Props> {
     }
     this._setPage(0);
 
-    const livesCount = new LivesCount(3);
+    const livesCount = new LivesCount(DEFAULT_LIVES_COUNT);
     livesCount.x = (this.props.width - 10);
     livesCount.y = 10;
-    livesCount.alpha = 0;    
+    livesCount.alpha = 0;
     this.app.stage.addChild(livesCount);
     this.livesCount = livesCount;
-    this.app.stage.on('livesNumChanged', this._onLivesNumChanged.bind(this));
+  }
+
+  onReset(data: Props) {
+    console.log(`onReset: ${JSON.stringify(data)}`);
+    this.reset();
+  }
+
+  reset() {
+    console.log('-- RESET --');
+    PIXI.sound.stopAll();
+
+    if (this.livesCount) {
+      this.app.stage.removeChild(this.livesCount);
+    }
+
+    this.init();
   }
 
   _onLivesNumChanged(diff: number) {
@@ -165,7 +186,7 @@ export default class HorsemanGame extends Game<Props> {
   _onView1Click() {
     this.scenes[0].scene.deactivate();// stop update ticks
     this.scenes[1].scene.startGame();
-    this.livesCount.alpha = 1;    
+    this.livesCount.alpha = 1;
     this._setPage(1);
   }
 
@@ -178,9 +199,16 @@ export default class HorsemanGame extends Game<Props> {
     this.livesCount.visible = false;
     this.scenes[1].scene.showGameOver();
 
+    var score = this.scenes[1].scene.killCount;
+    // pass score
+    defaultLifeCycle.setResult({
+      resultImageUrl: JOIN_IMAGE,
+      winCriteriaPassed: true,
+      score: {
+        value: score
+      }
+    });
     // Inform the host app that our mini app has ended
-    defaultLifeCycle.join(null, this.props.additionalInfo.background, true, null);
-    setTimeout(() => defaultLifeCycle.end(), 3000);
-    
-  }  
+    setTimeout(() => { defaultLifeCycle.end(); }, END_DELAY);
+  }
 }
