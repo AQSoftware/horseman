@@ -122,24 +122,14 @@ aproba@^1.0.3:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/aproba/-/aproba-1.1.2.tgz#45c6629094de4e96f693ef7eab74ae079c240fc1"
 
-"aq-miniapp-core@https://s3-ap-southeast-1.amazonaws.com/funminiapps/sdk/aq-miniapp-core-v0.0.15.tgz":
-  version "0.0.15"
-  resolved "https://s3-ap-southeast-1.amazonaws.com/funminiapps/sdk/aq-miniapp-core-v0.0.15.tgz#4b144a8942e3a1dcf68d73832408e6a54b7553a2"
+"aq-miniapp-core@https://s3-ap-southeast-1.amazonaws.com/funminiapps/sdk/aq-miniapp-core-v0.0.17.tgz":
+  version "0.0.17"
+  resolved "https://s3-ap-southeast-1.amazonaws.com/funminiapps/sdk/aq-miniapp-core-v0.0.17.tgz#3e9fee653135ed2ffee01efcedd4a375a57c9393"
   dependencies:
     base64-js "^1.2.1"
     hawk "^6.0.2"
     text-encoding-utf-8 "^1.0.1"
     uuid "^3.1.0"
-    whatwg-fetch "^2.0.3"
-
-"aq-miniapp@https://bitbucket.org/aqsoftware/aq-miniapp.git":
-  version "0.0.3"
-  resolved "https://bitbucket.org/aqsoftware/aq-miniapp.git#9ad67f61069e2bc41c21d5fcf1e453a23babc72a"
-  dependencies:
-    base64-js "^1.2.1"
-    hawk "^6.0.1"
-    text-encoding-utf-8 "^1.0.1"
-    uuid "^3.0.1"
     whatwg-fetch "^2.0.3"
 
 are-we-there-yet@~1.1.2:
@@ -2318,7 +2308,7 @@ hash.js@^1.0.0, hash.js@^1.0.3:
     inherits "^2.0.3"
     minimalistic-assert "^1.0.0"
 
-hawk@^6.0.1, hawk@^6.0.2:
+hawk@^6.0.2:
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/hawk/-/hawk-6.0.2.tgz#af4d914eb065f9b5ce4d9d11c1cb2126eecc3038"
   dependencies:
@@ -4827,7 +4817,7 @@ uuid@^2.0.2:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-2.0.3.tgz#67e2e863797215530dff318e5bf9dcebfd47b21a"
 
-uuid@^3.0.0, uuid@^3.0.1:
+uuid@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.1.0.tgz#3dd3d3e790abc24d7b0d3a034ffababe28ebbc04"
 

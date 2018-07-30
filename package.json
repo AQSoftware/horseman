@@ -16,8 +16,7 @@
   "author": "Ryan C. Brozo",
   "license": "UNLICENSED",
   "dependencies": {
-    "aq-miniapp": "https://bitbucket.org/aqsoftware/aq-miniapp.git",
-    "aq-miniapp-core": "https://s3-ap-southeast-1.amazonaws.com/funminiapps/sdk/aq-miniapp-core-v0.0.15.tgz",
+    "aq-miniapp-core": "https://s3-ap-southeast-1.amazonaws.com/funminiapps/sdk/aq-miniapp-core-v0.0.17.tgz",
     "isomorphic-fetch": "^2.2.1"
   },
   "devDependencies": {

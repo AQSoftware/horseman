@@ -2,7 +2,7 @@
 import Game from './components/Game';
 import Assets, { ASSETS } from './assets';
 import {
-  defaultLifeCycle
+  LifeCycle, WinCriteriaEnum
 } from 'aq-miniapp-core';
 
 
@@ -61,7 +61,7 @@ export default class HorsemanGame extends Game<Props> {
     this.reset();
 
     // Inform the host app that we are ready to be displayed
-    defaultLifeCycle.informReady();
+    LifeCycle.informReady();
   }
 
   _initEvents() {
@@ -201,14 +201,14 @@ export default class HorsemanGame extends Game<Props> {
 
     var score = this.scenes[1].scene.killCount;
     // pass score
-    defaultLifeCycle.setResult({
+    LifeCycle.setResult({
       resultImageUrl: JOIN_IMAGE,
-      winCriteriaPassed: true,
+      winCriteria: WinCriteriaEnum.Win,
       score: {
         value: score
       }
     });
     // Inform the host app that our mini app has ended
-    setTimeout(() => { defaultLifeCycle.end(); }, END_DELAY);
+    setTimeout(() => { LifeCycle.end(); }, END_DELAY);
   }
 }
