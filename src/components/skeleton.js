@@ -96,6 +96,10 @@ export default class Skeleton extends PixiContainer {
   }
 
   animateSkeletons(speed) {
+    if (typeof (speed) === 'undefined') {
+      console.log('undefined');
+      return;
+    }
     var numAlive = 0;
 
     var realSpeed = this.STEP / (2 * Math.PI / speed);

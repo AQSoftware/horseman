@@ -109,6 +109,10 @@ export default class Horseman extends PixiContainer {
   }
 
   animateFlail(speed) {
+    if (typeof(speed) === 'undefined') {
+      console.log('undefined');
+      return;
+    }
     // this.flail.rotation -= this.rIndex;
     this.flail.rotation -= speed;
     this.stepCounter++;
