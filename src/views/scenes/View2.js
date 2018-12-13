@@ -73,7 +73,6 @@ export default class View2 extends PixiContainer {
       fontFamily: "Arial",
       fontSize: "22px",
       fill: ['#ffffff'],
-      align: 'left',
       dropShadow: true, dropShadowDistance: 2, dropShadowColor: 'grey'
     }));
     this.killsText.addChild(kills);
@@ -82,10 +81,9 @@ export default class View2 extends PixiContainer {
       fontFamily: "Arial",
       fontSize: "48px",
       fill: ['#ffffff'],
-      align: 'center',
       dropShadow: true, dropShadowDistance: 2, dropShadowColor: 'grey'
     }));
-    this.killCountText.x = 50;
+    this.killCountText.x = 5;
     this.killCountText.y = 20;
     this.killsText.addChild(this.killCountText);
 
@@ -200,7 +198,6 @@ export default class View2 extends PixiContainer {
   }
 
   update() {
-    xSpeed += 0.00005;
     var speed = xSpeed;
     this.horseman.animateFlail(speed);
     var numAlive = this.skeleton.animateSkeletons(speed);
