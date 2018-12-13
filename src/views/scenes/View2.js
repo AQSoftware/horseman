@@ -27,7 +27,7 @@ var xSpeed;
 export default class View2 extends PixiContainer {
   setup() {
     _killCount = 0;
-    
+
     ANGLE_FROM = this.props.allowHitFrom;
     ANGLE_TO = this.props.allowHitTo;
 
@@ -85,11 +85,11 @@ export default class View2 extends PixiContainer {
       align: 'center',
       dropShadow: true, dropShadowDistance: 2, dropShadowColor: 'grey'
     }));
-    this.killCountText.x = 15;
+    this.killCountText.x = 50;
     this.killCountText.y = 20;
     this.killsText.addChild(this.killCountText);
 
-    this.killsText.x = 10;
+    this.killsText.x = 50;
     this.killsText.y = 10;
     this.gameContainer.addChild(this.killsText);
 
@@ -122,7 +122,7 @@ export default class View2 extends PixiContainer {
         //   killCount++;
         //   this.killCountText.text = killCount;
         //   PIXI.sound.play(Assets.sounds.sndHit);
-        // }            
+        // }
       }
     }.bind(this))
 
@@ -164,10 +164,10 @@ export default class View2 extends PixiContainer {
 
   onGameClose() {
     console.log('Game Closed!');
-    /** 
-     * 
+    /**
+     *
      *    close game window or whatever ....
-     * 
+     *
      */
 
   }
@@ -200,6 +200,7 @@ export default class View2 extends PixiContainer {
   }
 
   update() {
+    xSpeed += 0.00005;
     var speed = xSpeed;
     this.horseman.animateFlail(speed);
     var numAlive = this.skeleton.animateSkeletons(speed);
