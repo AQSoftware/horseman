@@ -27,7 +27,7 @@ var xSpeed;
 export default class View2 extends PixiContainer {
   setup() {
     _killCount = 0;
-    
+
     ANGLE_FROM = this.props.allowHitFrom;
     ANGLE_TO = this.props.allowHitTo;
 
@@ -85,12 +85,10 @@ export default class View2 extends PixiContainer {
       align: 'center',
       dropShadow: true, dropShadowDistance: 2, dropShadowColor: 'grey'
     }));
-    this.killCountText.x = 15;
-    this.killCountText.y = 20;
+    this.killCountText.x = kills.width + 5;
+    this.killCountText.y = -17;
     this.killsText.addChild(this.killCountText);
 
-    this.killsText.x = 10;
-    this.killsText.y = 10;
     this.gameContainer.addChild(this.killsText);
 
     this.horseman = new Horseman(this.pixi);
@@ -102,6 +100,10 @@ export default class View2 extends PixiContainer {
     this.skeleton.heads[0].deadCounted = true;
     this.gameContainer.addChild(this.horseman.container);
     this.gameContainer.addChild(this.skeleton.container);
+
+    var image = this.skeleton.images[0];
+    this.killsText.x = this.width / 2 - this.killsText.width / 2;
+    this.killsText.y = (image.y + image.height) * 1 + 20;
 
     this.scene.on('pointerdown', function () {
       this.didTap = true;
@@ -139,7 +141,7 @@ export default class View2 extends PixiContainer {
 
   showGameOver() {
     this.isGameOn = false;
-    this.killsText.visible = false;
+    // this.killsText.y = this.height / 2 + this.height / 2 * .35;
 
     TweenMax.to([this.skeleton.container, this.horseman.flail].concat(this.horseman.flameTrail), 1, { alpha: 0 });
     this.message.y += 20;
