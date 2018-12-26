@@ -20,7 +20,7 @@ export default class View1 extends PixiContainer {
       onPress: this.props.onPress
     });
     this.button.setup();
-    this.button.scene.scale.set(0.5);    
+    this.button.scene.scale.set(0.5);
     this.button.scene.position = new PIXI.Point(
       (this.width - this.button.scene.width) / 2.0,
       (this.height - this.button.scene.height) - VERTICAL_OFFSET
@@ -50,6 +50,17 @@ export default class View1 extends PixiContainer {
 
     this.gameContainer.addChild(this.message);
 
+    this.tap = new PIXI.Text("Tap", new PIXI.TextStyle({
+      fontFamily: 'Arial',
+      fontWeight: 'bold',
+      fontSize: 32,
+      fill: '#fefe3c',
+      lineJoin: "round",
+      stroke: "#ff0000",
+      strokeThickness: 2
+    }));
+    this.gameContainer.addChild(this.tap);
+
     this.scene.addChild(this.gameContainer);
     this.scene.addChild(this.button.scene);
 
@@ -63,7 +74,7 @@ export default class View1 extends PixiContainer {
   startAnimation() {
     this.horseman.setIndex();
     this.didHit = false;
-    this.didShowHit = false;    
+    this.didShowHit = false;
     this.doAnimate = true;
 
     var head = this.skeleton.heads[0];
@@ -74,6 +85,10 @@ export default class View1 extends PixiContainer {
     circle.x = head.x + head.width / 2;
     circle.y = head.y + head.height / 6;
     circle.alpha = .5;
+
+    this.tap.x = circle.x - 140;
+    this.tap.y = circle.y + 40;
+    this.tap.rotation = -30 * Math.PI / 180;
   }
 
   update() {
@@ -96,10 +111,12 @@ export default class View1 extends PixiContainer {
       if (r < this.props.allowHitFrom && !this.didShowHit) {
         this.didShowHit = true;
         this.circle.alpha = 1;
+        this.tap.alpha = 1;
       }
       if (r < this.props.allowHitTo && this.didShowHit) {
         this.didShowHit = false;
         this.circle.alpha = 0;
+        this.tap.alpha = 0;
       }
 
     }
