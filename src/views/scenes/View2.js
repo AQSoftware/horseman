@@ -17,12 +17,20 @@ var start = false;
 var _killCount = 0;
 
 const BUILDUP_TIME = 7;// 7 sec speed buildup
-const SKLT_SPEED_START = 0.01;
+// const SKLT_SPEED_START = 0.01;
+const SKLT_SPEED_START = 0.01 * 4;
 const SKLT_SPEED_MAX = 0.1;
-// const SKLT_SPEED_MAX = 0.05;
-const HRS_SPEED_START = 0.01;
+// const HRS_SPEED_START = 0.01;
+const HRS_SPEED_START = 0.01 * 4;
 const HRS_SPEED_MAX = 0.2;
-var xSpeed;
+var skeletonSpeed;
+var horseSpeed;
+
+const MULT_CHANGE_STEP = 4;
+// var SPEED_MULTS = [.2, .1, .1, .05];
+var SPEED_MULTS = [.6, .2, .2, .1];
+var nextMultChangeAt = MULT_CHANGE_STEP;
+var currentSpeedMult = 1;
 
 export default class View2 extends PixiContainer {
   setup() {
@@ -83,10 +91,10 @@ export default class View2 extends PixiContainer {
       fill: ['#ffffff'],
       dropShadow: true, dropShadowDistance: 2, dropShadowColor: 'grey'
     }));
-    this.killCountText.x = 5;
-    this.killCountText.y = 20;
+    this.killCountText.x = kills.width + 5;
+    this.killCountText.y = -17;
     this.killsText.addChild(this.killCountText);
-
+    
     this.killsText.x = 50;
     this.killsText.y = 10;
     this.gameContainer.addChild(this.killsText);
@@ -100,6 +108,10 @@ export default class View2 extends PixiContainer {
     this.skeleton.heads[0].deadCounted = true;
     this.gameContainer.addChild(this.horseman.container);
     this.gameContainer.addChild(this.skeleton.container);
+
+    var image = this.skeleton.images[0];
+    this.killsText.x = this.width / 2 - this.killsText.width / 2;
+    this.killsText.y = (image.y + image.height) * 1 + 20;
 
     this.scene.on('pointerdown', function () {
       this.didTap = true;
@@ -137,7 +149,7 @@ export default class View2 extends PixiContainer {
 
   showGameOver() {
     this.isGameOn = false;
-    this.killsText.visible = false;
+    // this.killsText.y = this.height / 2 + this.height / 2 * .35;
 
     TweenMax.to([this.skeleton.container, this.horseman.flail].concat(this.horseman.flameTrail), 1, { alpha: 0 });
     this.message.y += 20;
@@ -172,6 +184,7 @@ export default class View2 extends PixiContainer {
 
   startGame() {
     var obj = { gain: 0 };
+    /*
     TweenMax.to(obj, BUILDUP_TIME, {
       gain: 1,
       ease: Linear.easeNone,
@@ -180,6 +193,11 @@ export default class View2 extends PixiContainer {
         this.horseman.setHorseSpeed(HRS_SPEED_START + obj.gain * (HRS_SPEED_MAX - HRS_SPEED_START));
       }.bind(this)
     });
+    */
+    skeletonSpeed = SKLT_SPEED_START;
+    horseSpeed = SKLT_SPEED_START;
+    this.horseman.setHorseSpeed(horseSpeed);
+
     this.horseman.play();
     this.isGameOn = true;
     this.lastTapTime = new Date().getTime();
@@ -198,7 +216,7 @@ export default class View2 extends PixiContainer {
   }
 
   update() {
-    var speed = xSpeed;
+    var speed = skeletonSpeed;
     this.horseman.animateFlail(speed);
     var numAlive = this.skeleton.animateSkeletons(speed);
 
@@ -219,6 +237,7 @@ export default class View2 extends PixiContainer {
         _killCount++;
         this.killCountText.text = _killCount;
         PIXI.sound.play(Assets.sounds.sndHit);
+        this.updateSpeed();
       }
     }
 
@@ -228,6 +247,26 @@ export default class View2 extends PixiContainer {
     // } else {
     //   this.horseman.flail.alpha = 1;
     // }
+  }
+
+  updateSpeed() {
+    if (_killCount >= nextMultChangeAt) {
+      nextMultChangeAt += MULT_CHANGE_STEP;
+
+      var mult;
+      if (SPEED_MULTS.length > 1) {
+        mult = SPEED_MULTS.shift();
+      } else {
+        mult = SPEED_MULTS[0];
+      }
+
+      currentSpeedMult = mult;
+
+      // updated objects
+      skeletonSpeed *= (1 + currentSpeedMult);
+      horseSpeed *= (1 + currentSpeedMult);
+      this.horseman.setHorseSpeed(horseSpeed);
+    }
   }
 
   get killCount() {

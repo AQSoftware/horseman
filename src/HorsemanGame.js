@@ -72,7 +72,6 @@ export default class HorsemanGame extends Game<Props> {
 
   init() {
     this.app.speed = 0.5;
-
     var hitAngleFrom = this.props.allowHitFrom / 180 * Math.PI;
     var hitAngleTo = this.props.allowHitTo / 180 * Math.PI;
 
