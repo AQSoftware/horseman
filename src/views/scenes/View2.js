@@ -81,7 +81,6 @@ export default class View2 extends PixiContainer {
       fontFamily: "Arial",
       fontSize: "22px",
       fill: ['#ffffff'],
-      align: 'left',
       dropShadow: true, dropShadowDistance: 2, dropShadowColor: 'grey'
     }));
     this.killsText.addChild(kills);
@@ -90,13 +89,14 @@ export default class View2 extends PixiContainer {
       fontFamily: "Arial",
       fontSize: "48px",
       fill: ['#ffffff'],
-      align: 'center',
       dropShadow: true, dropShadowDistance: 2, dropShadowColor: 'grey'
     }));
     this.killCountText.x = kills.width + 5;
     this.killCountText.y = -17;
     this.killsText.addChild(this.killCountText);
-
+    
+    this.killsText.x = 50;
+    this.killsText.y = 10;
     this.gameContainer.addChild(this.killsText);
 
     this.horseman = new Horseman(this.pixi);
@@ -132,7 +132,7 @@ export default class View2 extends PixiContainer {
         //   killCount++;
         //   this.killCountText.text = killCount;
         //   PIXI.sound.play(Assets.sounds.sndHit);
-        // }            
+        // }
       }
     }.bind(this))
 
@@ -174,10 +174,10 @@ export default class View2 extends PixiContainer {
 
   onGameClose() {
     console.log('Game Closed!');
-    /** 
-     * 
+    /**
+     *
      *    close game window or whatever ....
-     * 
+     *
      */
 
   }
