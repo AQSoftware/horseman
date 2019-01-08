@@ -17,11 +17,11 @@ var start = false;
 var _killCount = 0;
 
 const BUILDUP_TIME = 7;// 7 sec speed buildup
-// const SKLT_SPEED_START = 0.01;
-const SKLT_SPEED_START = 0.01 * 4;
+const SKLT_SPEED_START_0 = 0.01;
+const SKLT_SPEED_START = 0.01 * 6;
 const SKLT_SPEED_MAX = 0.1;
-// const HRS_SPEED_START = 0.01;
-const HRS_SPEED_START = 0.01 * 4;
+const HRS_SPEED_START_0 = 0.01;
+const HRS_SPEED_START = 0.01 * 6;
 const HRS_SPEED_MAX = 0.2;
 var skeletonSpeed;
 var horseSpeed;
@@ -185,18 +185,21 @@ export default class View2 extends PixiContainer {
 
   startGame() {
     var obj = { gain: 0 };
-    /*
+    
     TweenMax.to(obj, BUILDUP_TIME, {
       gain: 1,
       ease: Linear.easeNone,
       onUpdate: function () {
-        xSpeed = SKLT_SPEED_START + obj.gain * (SKLT_SPEED_MAX - SKLT_SPEED_START);
-        this.horseman.setHorseSpeed(HRS_SPEED_START + obj.gain * (HRS_SPEED_MAX - HRS_SPEED_START));
+        // xSpeed = SKLT_SPEED_START + obj.gain * (SKLT_SPEED_MAX - SKLT_SPEED_START);
+        // this.horseman.setHorseSpeed(HRS_SPEED_START + obj.gain * (HRS_SPEED_MAX - HRS_SPEED_START));
+        skeletonSpeed = SKLT_SPEED_START_0 + obj.gain * (SKLT_SPEED_START - SKLT_SPEED_START_0);
+        horseSpeed = HRS_SPEED_START_0 + obj.gain * (HRS_SPEED_START - HRS_SPEED_START_0);
+        this.horseman.setHorseSpeed(horseSpeed);    
       }.bind(this)
     });
-    */
-    skeletonSpeed = SKLT_SPEED_START;
-    horseSpeed = SKLT_SPEED_START;
+    
+    skeletonSpeed = SKLT_SPEED_START_0;
+    horseSpeed = SKLT_SPEED_START_0;
     this.horseman.setHorseSpeed(horseSpeed);
 
     this.horseman.play();
