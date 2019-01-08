@@ -8,7 +8,7 @@ const KILL_RANGE_CLOSE = 40;
 
 export default class Skeleton extends PixiContainer {
   setup(width, height, flail) {
-
+    this.killing = false;
     this.width = width;
     this.height = height;
     this.scaleWidth = this.width;
@@ -96,6 +96,10 @@ export default class Skeleton extends PixiContainer {
   }
 
   animateSkeletons(speed) {
+    if (typeof (speed) === 'undefined') {
+      console.log('undefined');
+      return;
+    }
     var numAlive = 0;
 
     var realSpeed = this.STEP / (2 * Math.PI / speed);
@@ -205,30 +209,33 @@ export default class Skeleton extends PixiContainer {
     return pos;
   }
 
-  killAt(i) {
-    this.idle[i].visible = false;
-    this.images[i].visible = true;
-    this.images[i].play();
+  killAt(i) {   
+    if (!this.killing) {
+      this.killing = true;
+      this.idle[i].visible = false;
+      this.images[i].visible = true;
+      this.images[i].play();
 
-    var coords = {
-      x: this.heads[i].x,
-      y: this.heads[i].y
-    };
-
-    TweenLite.to(this.heads[i], .3, {
-      alpha: 0, x: "+=180", y: "-=40", onComplete: function (i) {
-        this.heads[i].x = coords.x;
-        this.heads[i].y = coords.y;
-        TweenLite.to(this.heads[i], .3, { alpha: 1 });
-        this.resetAt(i);
-      }.bind(this, i)
-    });
+      var coords = {
+        x: this.heads[i].x,
+        y: this.heads[i].y
+      };
+      TweenLite.to(this.heads[i], .3, {
+        alpha: 0, x: "+=180", y: "-=40", onComplete: function (i) {
+          this.heads[i].x = coords.x;
+          this.heads[i].y = coords.y;
+          TweenLite.to(this.heads[i], .3, { alpha: 1 });
+          this.resetAt(i);
+        }.bind(this, i)
+      });
+    }
   }
 
   resetAt(i) {
     this.idle[i].visible = true;
     this.images[i].visible = false;
     this.images[i].gotoAndStop(0);
+    this.killing = false;
   }
 
 

@@ -2,7 +2,7 @@
 import Game from './components/Game';
 import Assets, { ASSETS } from './assets';
 import {
-  defaultLifeCycle
+  LifeCycle, WinCriteriaEnum
 } from 'aq-miniapp-core';
 
 
@@ -17,6 +17,8 @@ import { normalizeRadians } from './libs/Utils';
 
 const BACKGROUND_COLOR = 0x83b8a8;
 const DEFAULT_LIVES_COUNT = 3;
+const END_DELAY = 1000;
+const JOIN_IMAGE = "https://s3.amazonaws.com/famers/720/F1164587631963X5VS1C.jpg";
 
 const PIXI = window.PIXI;
 
@@ -57,20 +59,19 @@ export default class HorsemanGame extends Game<Props> {
 
     this._initEvents();
     this.reset();
-  
+
     // Inform the host app that we are ready to be displayed
-    defaultLifeCycle.informReady();
+    LifeCycle.informReady();
   }
 
   _initEvents() {
     this.app.ticker.add(this._updateScene.bind(this));
     this.app.stage.on('livesNumChanged', this._onLivesNumChanged.bind(this));
-    window.onresize = this.resize.bind(this);    
+    window.onresize = this.resize.bind(this);
   }
 
   init() {
     this.app.speed = 0.5;
-    
     var hitAngleFrom = this.props.allowHitFrom / 180 * Math.PI;
     var hitAngleTo = this.props.allowHitTo / 180 * Math.PI;
 
@@ -199,8 +200,14 @@ export default class HorsemanGame extends Game<Props> {
 
     var score = this.scenes[1].scene.killCount;
     // pass score
-    if(defaultLifeCycle.setResult) defaultLifeCycle.setResult(score);
+    LifeCycle.setResult({
+      resultImageUrl: JOIN_IMAGE,
+      winCriteria: WinCriteriaEnum.Win,
+      score: {
+        value: score
+      }
+    });
     // Inform the host app that our mini app has ended
-    defaultLifeCycle.end();
+    setTimeout(() => { LifeCycle.end(); }, END_DELAY);
   }
 }

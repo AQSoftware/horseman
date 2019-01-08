@@ -20,7 +20,7 @@ export default class View1 extends PixiContainer {
       onPress: this.props.onPress
     });
     this.button.setup();
-    this.button.scene.scale.set(0.5);
+    this.button.scene.scale.set(0.5);    
     this.button.scene.position = new PIXI.Point(
       (this.width - this.button.scene.width) / 2.0,
       (this.height - this.button.scene.height) - VERTICAL_OFFSET

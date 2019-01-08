@@ -1,21 +1,24 @@
 {
   "name": "horseman",
-  "homepage": "https://zu1in.github.io/horseman",
   "version": "1.0.0",
   "description": "Horseman MiniApp",
   "private": true,
   "scripts": {
     "start": "node scripts/start.js",
-    "build": "node scripts/build.js",
-    "predeploy": "yarn build",
-    "deploy": "gh-pages -d build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rm -rf build/ && node scripts/build.js",
+    "package": "rm -f build/package.zip && cd build/ && zip -r package.zip *",
+    "sha": "shasum build/package.zip",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "createDeployVersion": "git config user.name > version && git config user.email >> version && git log --pretty=format:'%h%n' -n 1 >> version",
+    "deploy": "aws s3 sync build/ s3://bengga-web-funtypes/production/horseman",
+    "redeploy": "npm run createDeployVersion && npm run build && npm run package && npm run deploy && npm run sha"
   },
+  "homepage": ".",
   "author": "Ryan C. Brozo",
   "license": "UNLICENSED",
   "dependencies": {
-    "aq-miniapp": "https://bitbucket.org/aqsoftware/aq-miniapp.git",
-    "aq-miniapp-core": "https://s3-ap-southeast-1.amazonaws.com/funminiapps/sdk/aq-miniapp-core-v0.0.14.tgz"
+    "aq-miniapp-core": "https://s3-ap-southeast-1.amazonaws.com/funminiapps/sdk/aq-miniapp-core-v0.0.19.tgz",
+    "isomorphic-fetch": "^2.2.1"
   },
   "devDependencies": {
     "appcache-webpack-plugin": "^1.3.0",
