@@ -16,13 +16,13 @@ var timer = 0;
 var start = false;
 var _killCount = 0;
 
-const BUILDUP_TIME = 7;// 7 sec speed buildup
-const SKLT_SPEED_START_0 = 0.01;
-const SKLT_SPEED_START = 0.01 * 6;
-const SKLT_SPEED_MAX = 0.1;
-const HRS_SPEED_START_0 = 0.01;
-const HRS_SPEED_START = 0.01 * 6;
-const HRS_SPEED_MAX = 0.2;
+const BUILDUP_TIME = 3;// 7 sec speed buildup
+const SKLT_SPEED_START_0 = 0.03;
+const SKLT_SPEED_START = SKLT_SPEED_START_0 * 3;
+// const SKLT_SPEED_MAX = 0.1;
+const HRS_SPEED_START_0 = 0.03;
+const HRS_SPEED_START = HRS_SPEED_START_0 * 3;
+// const HRS_SPEED_MAX = 0.2;
 var skeletonSpeed;
 var horseSpeed;
 
@@ -162,7 +162,7 @@ export default class View2 extends PixiContainer {
       ease: Linear.easeNone,
       onUpdate: function () {
         // xSpeed = obj.gain * SKLT_SPEED_MAX;
-        this.horseman.setHorseSpeed(obj.gain * HRS_SPEED_MAX);
+        this.horseman.setHorseSpeed(obj.gain * horseSpeed);
       }.bind(this),
       onComplete: function () {
         setTimeout(this.onGameClose.bind(this), 2000);
