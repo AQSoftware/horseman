@@ -2,6 +2,10 @@ import { PixiContainer, PixiButton, Horseman, Skeleton } from '../../components'
 import Assets, { ASSETS } from '../../assets';
 import PIXIsound from 'pixi-sound';
 import { normalizeRadians } from '../../libs/Utils';
+import {
+  LifeCycle
+} from 'aq-miniapp-core';
+
 
 const VERTICAL_OFFSET = 20;
 const BUTTON_WIDTH = 227;
@@ -16,13 +20,13 @@ var timer = 0;
 var start = false;
 var _killCount = 0;
 
-const BUILDUP_TIME = 7;// 7 sec speed buildup
-const SKLT_SPEED_START_0 = 0.01;
-const SKLT_SPEED_START = 0.01 * 6;
-const SKLT_SPEED_MAX = 0.1;
-const HRS_SPEED_START_0 = 0.01;
-const HRS_SPEED_START = 0.01 * 6;
-const HRS_SPEED_MAX = 0.2;
+const BUILDUP_TIME = 3;// 7 sec speed buildup
+const SKLT_SPEED_START_0 = 0.03;
+const SKLT_SPEED_START = SKLT_SPEED_START_0 * 3;
+// const SKLT_SPEED_MAX = 0.1;
+const HRS_SPEED_START_0 = 0.03;
+const HRS_SPEED_START = HRS_SPEED_START_0 * 3;
+// const HRS_SPEED_MAX = 0.2;
 var skeletonSpeed;
 var horseSpeed;
 
@@ -77,7 +81,7 @@ export default class View2 extends PixiContainer {
 
     this.killsText = new PIXI.Container();
 
-    var kills = new PIXI.Text('Kills:'.toUpperCase(), new PIXI.TextStyle({
+    var kills = new PIXI.Text('Skulls:'.toUpperCase(), new PIXI.TextStyle({
       fontFamily: "Arial",
       fontSize: "22px",
       fill: ['#ffffff'],
@@ -94,7 +98,9 @@ export default class View2 extends PixiContainer {
     this.killCountText.x = kills.width + 5;
     this.killCountText.y = -17;
     this.killsText.addChild(this.killCountText);
-    
+
+    this.updateKillsCount(0);
+
     this.killsText.x = 50;
     this.killsText.y = 10;
     this.gameContainer.addChild(this.killsText);
@@ -162,7 +168,7 @@ export default class View2 extends PixiContainer {
       ease: Linear.easeNone,
       onUpdate: function () {
         // xSpeed = obj.gain * SKLT_SPEED_MAX;
-        this.horseman.setHorseSpeed(obj.gain * HRS_SPEED_MAX);
+        this.horseman.setHorseSpeed(obj.gain * horseSpeed);
       }.bind(this),
       onComplete: function () {
         setTimeout(this.onGameClose.bind(this), 2000);
@@ -171,6 +177,9 @@ export default class View2 extends PixiContainer {
 
     PIXI.sound.stopAll();
     PIXI.sound.play(Assets.sounds.sndFinal);
+
+    // report result to host app
+    LifeCycle.setResult(_killCount);
   }
 
   onGameClose() {
@@ -185,7 +194,7 @@ export default class View2 extends PixiContainer {
 
   startGame() {
     var obj = { gain: 0 };
-    
+
     TweenMax.to(obj, BUILDUP_TIME, {
       gain: 1,
       ease: Linear.easeNone,
@@ -194,10 +203,10 @@ export default class View2 extends PixiContainer {
         // this.horseman.setHorseSpeed(HRS_SPEED_START + obj.gain * (HRS_SPEED_MAX - HRS_SPEED_START));
         skeletonSpeed = SKLT_SPEED_START_0 + obj.gain * (SKLT_SPEED_START - SKLT_SPEED_START_0);
         horseSpeed = HRS_SPEED_START_0 + obj.gain * (HRS_SPEED_START - HRS_SPEED_START_0);
-        this.horseman.setHorseSpeed(horseSpeed);    
+        this.horseman.setHorseSpeed(horseSpeed);
       }.bind(this)
     });
-    
+
     skeletonSpeed = SKLT_SPEED_START_0;
     horseSpeed = SKLT_SPEED_START_0;
     this.horseman.setHorseSpeed(horseSpeed);
@@ -239,7 +248,7 @@ export default class View2 extends PixiContainer {
         this.hitAccepted = false;
         this.skeleton.performKill(index);
         _killCount++;
-        this.killCountText.text = _killCount;
+        this.updateKillsCount(_killCount);
         PIXI.sound.play(Assets.sounds.sndHit);
         this.updateSpeed();
       }
@@ -251,6 +260,11 @@ export default class View2 extends PixiContainer {
     // } else {
     //   this.horseman.flail.alpha = 1;
     // }
+  }
+
+  updateKillsCount(count) {
+    var killsTarget = (this.props.targetScore && this.props.targetScore > 0) ? '/' + this.props.targetScore : '';
+    this.killCountText.text = count + killsTarget;
   }
 
   updateSpeed() {

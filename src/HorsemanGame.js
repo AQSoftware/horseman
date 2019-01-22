@@ -88,7 +88,8 @@ export default class HorsemanGame extends Game<Props> {
         ticker: this.tickCallback,
         onPress: this._onView1Click.bind(this),
         allowHitFrom: hitAngleFrom,
-        allowHitTo: hitAngleTo
+        allowHitTo: hitAngleTo,
+        targetScore: this.props.targetScore
       })
     });
     this.scenes.push({
@@ -96,7 +97,8 @@ export default class HorsemanGame extends Game<Props> {
         ticker: this.tickCallback.bind(this),
         // onPress: this._onView2Click.bind(this),
         allowHitFrom: hitAngleFrom,
-        allowHitTo: hitAngleTo
+        allowHitTo: hitAngleTo,
+        targetScore: this.props.targetScore
       })
     });
     this.setup();
