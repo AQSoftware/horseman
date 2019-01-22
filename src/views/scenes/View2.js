@@ -81,7 +81,7 @@ export default class View2 extends PixiContainer {
 
     this.killsText = new PIXI.Container();
 
-    var kills = new PIXI.Text('Kills:'.toUpperCase(), new PIXI.TextStyle({
+    var kills = new PIXI.Text('Skulls:'.toUpperCase(), new PIXI.TextStyle({
       fontFamily: "Arial",
       fontSize: "22px",
       fill: ['#ffffff'],
