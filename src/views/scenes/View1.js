@@ -20,7 +20,7 @@ export default class View1 extends PixiContainer {
       onPress: this.props.onPress
     });
     this.button.setup();
-    this.button.scene.scale.set(0.5);    
+    this.button.scene.scale.set(0.5);
     this.button.scene.position = new PIXI.Point(
       (this.width - this.button.scene.width) / 2.0,
       (this.height - this.button.scene.height) - VERTICAL_OFFSET
@@ -42,7 +42,8 @@ export default class View1 extends PixiContainer {
       fill: '#ffffff',
     });
 
-    this.message = new PIXI.Text("Try to hit as many", style);
+    var title = "Hit " + ((this.props.targetScore && this.props.targetScore > 0) ? this.props.targetScore : ' as many') + ' skulls';
+    this.message = new PIXI.Text(title, style);
     this.message.anchor.x = 0.5;
     this.message.anchor.y = 0.5;
     this.message.x = this.width / 2;
