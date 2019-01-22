@@ -4,7 +4,7 @@ import HorsemanGame from './HorsemanGame';
 
 const GAME_WIDTH = window.innerWidth;
 const GAME_HEIGHT = window.innerHeight;
-const DEVT = true;
+const DEVT = false;
 
 /**
  * shouldWin - Tells the MiniApp to force the current game iteration to win

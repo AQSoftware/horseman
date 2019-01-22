@@ -32,7 +32,7 @@ var horseSpeed;
 
 const MULT_CHANGE_STEP = 4;
 // var SPEED_MULTS = [.2, .1, .1, .05];
-var SPEED_MULTS = [.6, .2, .2, .1];
+var SPEED_MULTS = [.2, .2, .2, .1];
 var nextMultChangeAt = MULT_CHANGE_STEP;
 var currentSpeedMult = 1;
 
