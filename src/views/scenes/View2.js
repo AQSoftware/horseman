@@ -36,8 +36,11 @@ var SPEED_MULTS = [.2, .2, .2, .1];
 var nextMultChangeAt = MULT_CHANGE_STEP;
 var currentSpeedMult = 1;
 
+var _targetScore;
+
 export default class View2 extends PixiContainer {
   setup() {
+    if (this.props.targetScore && this.props.targetScore > 0) _targetScore = this.props.targetScore;
     _killCount = 0;
 
     ANGLE_FROM = this.props.allowHitFrom;
@@ -154,9 +157,11 @@ export default class View2 extends PixiContainer {
     PIXI.sound.play(Assets.sounds.sndClick);
   }
 
-  showGameOver() {
+  showGameOver(didWin) {
     this.isGameOn = false;
     // this.killsText.y = this.height / 2 + this.height / 2 * .35;
+
+    this.message.text = didWin ? 'You did it!' : 'Game Over';
 
     TweenMax.to([this.skeleton.container, this.horseman.flail].concat(this.horseman.flameTrail), 1, { alpha: 0 });
     this.message.y += 20;
@@ -179,7 +184,13 @@ export default class View2 extends PixiContainer {
     PIXI.sound.play(Assets.sounds.sndFinal);
 
     // report result to host app
-    LifeCycle.setResult(_killCount);
+    LifeCycle.setResult({
+      winCriteria: 'WIN',
+      score: {
+        value: _killCount,
+        target: _targetScore
+      }
+    });
   }
 
   onGameClose() {
@@ -251,6 +262,10 @@ export default class View2 extends PixiContainer {
         this.updateKillsCount(_killCount);
         PIXI.sound.play(Assets.sounds.sndHit);
         this.updateSpeed();
+
+        if (_targetScore && _killCount == _targetScore) {
+          this.showGameOver(true);
+        }
       }
     }
 
@@ -263,7 +278,7 @@ export default class View2 extends PixiContainer {
   }
 
   updateKillsCount(count) {
-    var killsTarget = (this.props.targetScore && this.props.targetScore > 0) ? '/' + this.props.targetScore : '';
+    var killsTarget = _targetScore ? '/' + _targetScore : '';
     this.killCountText.text = count + killsTarget;
   }
 
