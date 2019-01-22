@@ -38,7 +38,7 @@ export default class View1 extends PixiContainer {
 
     var style = new PIXI.TextStyle({
       fontFamily: 'Arial',
-      fontSize: 22,
+      fontSize: 32,
       fill: '#ffffff',
     });
 
