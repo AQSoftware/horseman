@@ -150,7 +150,7 @@ export default class HorsemanGame extends Game<Props> {
   _onScoreChanged(score: number) {
     var targetScore = this.props.targetScore || 0;
     if (targetScore > 0 && score == targetScore) {
-      this.showGameOver(true);
+      this.showGameOver();
     }
   }
 
@@ -204,15 +204,22 @@ export default class HorsemanGame extends Game<Props> {
     this._setPage(2);
   }
 
-  showGameOver(didWin) {
+  showGameOver() {
+    var score = this.scenes[1].scene.killCount;
+    var didWin = false;
+
+    var targetScore = this.props.targetScore || 0;
+    if (targetScore > 0 && score == targetScore) {
+      didWin = true;
+    }
+
     this.livesCount.visible = false;
     this.scenes[1].scene.showGameOver(didWin);
 
-    var score = this.scenes[1].scene.killCount;
     // pass score
     LifeCycle.setResult({
       resultImageUrl: JOIN_IMAGE,
-      winCriteria: WinCriteriaEnum.Win,
+      winCriteria: didWin ? WinCriteriaEnum.Win : WinCriteriaEnum.Lose,
       score: {
         value: score,
         target: this.props.targetScore
