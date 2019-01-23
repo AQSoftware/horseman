@@ -38,6 +38,9 @@ var currentSpeedMult = 1;
 
 var _targetScore;
 
+var MAX_IDLE_CIRCLES = 3;
+var _circleCounter;
+
 export default class View2 extends PixiContainer {
   setup() {
     if (this.props.targetScore && this.props.targetScore > 0) _targetScore = this.props.targetScore;
@@ -98,7 +101,7 @@ export default class View2 extends PixiContainer {
       fill: ['#ffffff'],
       dropShadow: true, dropShadowDistance: 2, dropShadowColor: 'grey'
     }));
-    this.killCountText.x = kills.width + 5;
+    this.killCountText.x = kills.width + 15;
     this.killCountText.y = -17;
     this.killsText.addChild(this.killCountText);
 
@@ -110,6 +113,9 @@ export default class View2 extends PixiContainer {
 
     this.horseman = new Horseman(this.pixi);
     this.horseman.setup(this.width, this.height);
+
+    _circleCounter = 0;
+    this.horseman.scene.on('EventCirclePassed', this.onCirclePassed.bind(this));
 
     this.skeleton = new Skeleton(this.pixi);
     this.skeleton.setup(this.width, this.height, this.horseman.getHorseDimensions());
@@ -125,6 +131,7 @@ export default class View2 extends PixiContainer {
 
     this.scene.on('pointerdown', function () {
       this.didTap = true;
+      _circleCounter = 0;
 
       var tapTime = new Date().getTime();
       if ((tapTime - this.lastTapTime) < MIN_TAP_DELAY) {
@@ -149,6 +156,14 @@ export default class View2 extends PixiContainer {
     this.gameContainer.addChild(this.message);
 
     this.scene.addChild(this.gameContainer);
+  }
+
+  onCirclePassed() {
+    if (_circleCounter >= MAX_IDLE_CIRCLES) {
+      _circleCounter = 0;
+      this.onLifeLost();
+    }
+    _circleCounter++;
   }
 
   onLifeLost() {
@@ -183,7 +198,9 @@ export default class View2 extends PixiContainer {
     PIXI.sound.stopAll();
     PIXI.sound.play(Assets.sounds.sndFinal);
 
+    // remove event listeners
     this.scene.off('pointerdown');
+    this.horseman.scene.off('EventCirclePassed');
 
     // report result to host app
     LifeCycle.setResult({

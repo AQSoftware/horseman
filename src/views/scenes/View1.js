@@ -6,7 +6,7 @@ import TweenMax from '../../libs/gsap/TweenMax.min';
 import PixiPlugin from '../../libs/gsap/plugins/PixiPlugin.min';
 import PIXIsound from 'pixi-sound';
 
-const VERTICAL_OFFSET = 20;
+const VERTICAL_OFFSET = 40;
 const BUTTON_WIDTH = 227;
 const BUTTON_HEIGHT = 69;
 
@@ -47,7 +47,7 @@ export default class View1 extends PixiContainer {
     this.message.anchor.x = 0.5;
     this.message.anchor.y = 0.5;
     this.message.x = this.width / 2;
-    this.message.y = this.horseman.horseman.y + this.horseman.horseman.height * .05;
+    this.message.y = this.horseman.horseman.y - this.message.height / 2;
 
     this.gameContainer.addChild(this.message);
 

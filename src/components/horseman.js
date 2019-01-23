@@ -119,6 +119,7 @@ export default class Horseman extends PixiContainer {
     if (this.flail.rotation <= -Math.PI * 2) {
       this.flail.rotation = 0 + Math.PI * 2 + this.flail.rotation;
       this.stepCounter = 0;
+      this.scene.emit('EventCirclePassed');
     }
     for (var f = 0; f < this.flameTrail.length; f += 2) {
       var x = this.flail.x + Math.cos(this.flail.rotation - Math.PI / (2.2 + f / 20)) * (this.flail.height - 20);
