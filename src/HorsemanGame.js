@@ -67,6 +67,7 @@ export default class HorsemanGame extends Game<Props> {
   _initEvents() {
     this.app.ticker.add(this._updateScene.bind(this));
     this.app.stage.on('livesNumChanged', this._onLivesNumChanged.bind(this));
+    this.app.stage.on('scoreChanged', this._onScoreChanged.bind(this));
     window.onresize = this.resize.bind(this);
   }
 
@@ -146,6 +147,13 @@ export default class HorsemanGame extends Game<Props> {
     }
   }
 
+  _onScoreChanged(score: number) {
+    var targetScore = this.props.targetScore || 0;
+    if (targetScore > 0 && score == targetScore) {
+      this.showGameOver(true);
+    }
+  }
+
   _setPage(page: number) {
     this.pageNumber = page;
     if (this.currentScene) {
@@ -196,9 +204,9 @@ export default class HorsemanGame extends Game<Props> {
     this._setPage(2);
   }
 
-  showGameOver() {
+  showGameOver(didWin) {
     this.livesCount.visible = false;
-    this.scenes[1].scene.showGameOver();
+    this.scenes[1].scene.showGameOver(didWin);
 
     var score = this.scenes[1].scene.killCount;
     // pass score
@@ -206,7 +214,8 @@ export default class HorsemanGame extends Game<Props> {
       resultImageUrl: JOIN_IMAGE,
       winCriteria: WinCriteriaEnum.Win,
       score: {
-        value: score
+        value: score,
+        target: this.props.targetScore
       }
     });
     // Inform the host app that our mini app has ended
