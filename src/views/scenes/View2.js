@@ -183,6 +183,8 @@ export default class View2 extends PixiContainer {
     PIXI.sound.stopAll();
     PIXI.sound.play(Assets.sounds.sndFinal);
 
+    this.scene.off('pointerdown');
+
     // report result to host app
     LifeCycle.setResult({
       winCriteria: 'WIN',

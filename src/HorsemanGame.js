@@ -210,6 +210,6 @@ export default class HorsemanGame extends Game<Props> {
       }
     });
     // Inform the host app that our mini app has ended
-    setTimeout(() => { LifeCycle.end(); }, END_DELAY);
+    setTimeout(() => { console.log('LifeCycle.end()'); LifeCycle.end(); }, END_DELAY);
   }
 }
