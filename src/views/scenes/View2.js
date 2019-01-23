@@ -201,15 +201,6 @@ export default class View2 extends PixiContainer {
     // remove event listeners
     this.scene.off('pointerdown');
     this.horseman.scene.off('EventCirclePassed');
-
-    // report result to host app
-    LifeCycle.setResult({
-      winCriteria: 'WIN',
-      score: {
-        value: _killCount,
-        target: _targetScore
-      }
-    });
   }
 
   onGameClose() {
@@ -282,9 +273,7 @@ export default class View2 extends PixiContainer {
         PIXI.sound.play(Assets.sounds.sndHit);
         this.updateSpeed();
 
-        if (_targetScore && _killCount == _targetScore) {
-          this.showGameOver(true);
-        }
+        this.scene.parent.emit('scoreChanged', _killCount);
       }
     }
 
