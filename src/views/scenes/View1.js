@@ -42,7 +42,7 @@ export default class View1 extends PixiContainer {
       fill: '#ffffff',
     });
 
-    var title = "Hit " + ((this.props.targetScore && this.props.targetScore > 0) ? this.props.targetScore : ' as many') + ' skulls';
+    var title = "Hit " + ((this.props.targetScore && this.props.targetScore > 0) ? this.props.targetScore : 'as many') + ' skulls';
     this.message = new PIXI.Text(title, style);
     this.message.anchor.x = 0.5;
     this.message.anchor.y = 0.5;

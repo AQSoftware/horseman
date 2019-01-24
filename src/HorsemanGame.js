@@ -23,13 +23,14 @@ const JOIN_IMAGE = "https://s3.amazonaws.com/famers/720/F1164587631963X5VS1C.jpg
 const PIXI = window.PIXI;
 
 type Props = {
-  additionalInfo: {
+  engagementInfo: {
     background: string
   },
   width: number,
   height: number,
   allowHitFrom: number,
-  allowHitTo: number
+  allowHitTo: number,
+  targetScore: number
 }
 
 export default class HorsemanGame extends Game<Props> {
@@ -43,16 +44,16 @@ export default class HorsemanGame extends Game<Props> {
   height: number;
 
   gameDidMount() {
-    // Add additional assets to load which are passed through this.props.additionalInfo
+    // Add additional assets to load which are passed through this.props.engagementInfo
     const thingsToLoad = ASSETS.concat([
-      this.props.additionalInfo.background
+      this.props.engagementInfo.background
     ]);
     this.loadAssets(thingsToLoad);
   }
 
   gameDidLoad(loader: any, resources: any) {
 
-    const bg = new PIXI.Sprite(resources[this.props.additionalInfo.background].texture)
+    const bg = new PIXI.Sprite(resources[this.props.engagementInfo.background].texture)
     bg.width = this.app.renderer.width;
     bg.height = this.app.renderer.height;
     this.app.stage.addChild(bg);

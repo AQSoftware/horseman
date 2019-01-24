@@ -26,7 +26,7 @@ export default class Game<T> {
   loadAssets(assets: Array<any>) {
     // load the texture we need
     PIXI.loader
-      .add(assets)
+      .add(assets, {crossOrigin: true})
       .on("progress", this.onLoadProgress.bind(this))
       .load(this.gameDidLoad.bind(this));
   }

@@ -69,7 +69,9 @@ export default class MiniApp {
       resolution: 1
     });
 
-    this.game = new this.props.game(this.app, data);
+    // Merge data with game-relevant data
+    const updated = Object.assign({}, this.props.data, data);
+    this.game = new this.props.game(this.app, updated);
 
     if (document.body != null) {
       document.body.appendChild(this.app.view);
