@@ -1,0 +1,84 @@
+diff --git a/src/HorsemanGame.js b/src/HorsemanGame.js
+index d4bba93..e2aad87 100644
+--- a/src/HorsemanGame.js
++++ b/src/HorsemanGame.js
+@@ -23,13 +23,14 @@ const JOIN_IMAGE = "https://s3.amazonaws.com/famers/720/F1164587631963X5VS1C.jpg
+ const PIXI = window.PIXI;
+ 
+ type Props = {
+-  additionalInfo: {
++  engagementInfo: {
+     background: string
+   },
+   width: number,
+   height: number,
+   allowHitFrom: number,
+-  allowHitTo: number
++  allowHitTo: number,
++  targetScore: number
+ }
+ 
+ export default class HorsemanGame extends Game<Props> {
+@@ -43,16 +44,16 @@ export default class HorsemanGame extends Game<Props> {
+   height: number;
+ 
+   gameDidMount() {
+-    // Add additional assets to load which are passed through this.props.additionalInfo
++    // Add additional assets to load which are passed through this.props.engagementInfo
+     const thingsToLoad = ASSETS.concat([
+-      this.props.additionalInfo.background
++      this.props.engagementInfo.background
+     ]);
+     this.loadAssets(thingsToLoad);
+   }
+ 
+   gameDidLoad(loader: any, resources: any) {
+ 
+-    const bg = new PIXI.Sprite(resources[this.props.additionalInfo.background].texture)
++    const bg = new PIXI.Sprite(resources[this.props.engagementInfo.background].texture)
+     bg.width = this.app.renderer.width;
+     bg.height = this.app.renderer.height;
+     this.app.stage.addChild(bg);
+diff --git a/src/components/MiniApp.js b/src/components/MiniApp.js
+index a387ec2..44c484c 100644
+--- a/src/components/MiniApp.js
++++ b/src/components/MiniApp.js
+@@ -69,7 +69,9 @@ export default class MiniApp {
+       resolution: 1
+     });
+ 
+-    this.game = new this.props.game(this.app, data);
++    // Merge data with game-relevant data
++    const updated = Object.assign({}, this.props, data);
++    this.game = new this.props.game(this.app, updated);
+ 
+     if (document.body != null) {
+       document.body.appendChild(this.app.view);
+diff --git a/src/index.js b/src/index.js
+index 5862906..775f2b5 100644
+--- a/src/index.js
++++ b/src/index.js
+@@ -11,12 +11,12 @@ const DEVT = true;
+  * winImage - Optional. Image URL of item won. Only present if shouldWin is true.
+  * source - User info of current user playing the MiniApp
+  * engagementSource - User info of user who created the instance of the MiniApp
+- * additionalInfo - Data specific to the MiniApp.
++ * engagementInfo - Data specific to the MiniApp.
+  */
+ let data = {
+   shouldWin: false,
+   winImage: "https://s3.amazonaws.com/famers/720/F1040881145111POSYEB.png",
+-  additionalInfo: {
++  engagementInfo: {
+     background: "https://s3.amazonaws.com/famers/720/F1040881145112DFY3HK.jpg"
+   },
+   width: GAME_WIDTH,
+@@ -30,7 +30,7 @@ const miniApp = new MiniApp({
+   width: GAME_WIDTH,
+   height: GAME_HEIGHT,
+   game: HorsemanGame,
+-  devt: DEVT,
++  devt: false,
+   data: data
+ });
+ 
