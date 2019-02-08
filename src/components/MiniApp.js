@@ -5,6 +5,7 @@ import {
 import Game from './Game';
 
 const PIXI = window.PIXI;
+const BACKGROUND_COLOR = 0x86b8a9;
 
 type Props = {
   width: number,
@@ -31,6 +32,7 @@ export default class MiniApp {
     else {
       LifeCycle.setOnDataCallback(this.onData.bind(this));
     }
+    LifeCycle.informLoaded();
   }
 
   onReset(newData: Object) {
@@ -66,7 +68,8 @@ export default class MiniApp {
       height: this.props.height,
       antialias: true,
       transparent: false,
-      resolution: 1
+      resolution: 1,
+      backgroundColor: BACKGROUND_COLOR
     });
 
     // Merge data with game-relevant data

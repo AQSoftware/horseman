@@ -15,7 +15,6 @@ import {
 import LivesCount from './components/LivesCount';
 import { normalizeRadians } from './libs/Utils';
 
-const BACKGROUND_COLOR = 0x83b8a8;
 const DEFAULT_LIVES_COUNT = 3;
 const END_DELAY = 1000;
 const JOIN_IMAGE = "https://s3.amazonaws.com/famers/720/F1164587631963X5VS1C.jpg";
@@ -56,7 +55,7 @@ export default class HorsemanGame extends Game<Props> {
     const bg = new PIXI.Sprite(resources[this.props.engagementInfo.background].texture)
     bg.width = this.app.renderer.width;
     bg.height = this.app.renderer.height;
-    this.app.stage.addChild(bg);
+    // this.app.stage.addChild(bg);
 
     this._initEvents();
     this.reset();
