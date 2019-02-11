@@ -127,7 +127,7 @@ export default class View2 extends PixiContainer {
     var image = this.skeleton.images[0];
     this.killsText.x = this.width / 2 - this.killsText.width / 2;
     var bottom = (image.y + image.height);
-    this.killsText.y = bottom + (this.scene.height - bottom) / 2 - 0;
+    this.killsText.y = bottom + (this.scene.height - bottom) / 2 - 40;
 
     this.scene.on('pointerdown', function () {
       this.didTap = true;
