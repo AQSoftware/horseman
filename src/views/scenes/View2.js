@@ -22,19 +22,18 @@ var _killCount = 0;
 
 const BUILDUP_TIME = 3;// 7 sec speed buildup
 const SKLT_SPEED_START_0 = 0.03;
-const SKLT_SPEED_START = SKLT_SPEED_START_0 * 3;
-// const SKLT_SPEED_MAX = 0.1;
+// const SKLT_SPEED_START = SKLT_SPEED_START_0 * 3;
+var SKLT_SPEED_START;
 const HRS_SPEED_START_0 = 0.03;
-const HRS_SPEED_START = HRS_SPEED_START_0 * 3;
-// const HRS_SPEED_MAX = 0.2;
+// const HRS_SPEED_START = HRS_SPEED_START_0 * 3;
+var HRS_SPEED_START;
 var skeletonSpeed;
 var horseSpeed;
 
-const MULT_CHANGE_STEP = 4;
-// var SPEED_MULTS = [.2, .1, .1, .05];
-var SPEED_MULTS = [.2, .2, .2, .1];
-var nextMultChangeAt = MULT_CHANGE_STEP;
-var currentSpeedMult = 1;
+// const MULT_CHANGE_STEP = 4;
+// var SPEED_MULTS = [.2, .2, .2, .1];
+// var nextMultChangeAt = MULT_CHANGE_STEP;
+// var currentSpeedMult = 1;
 
 var _targetScore;
 
@@ -45,6 +44,9 @@ export default class View2 extends PixiContainer {
   setup() {
     if (this.props.targetScore && this.props.targetScore > 0) _targetScore = this.props.targetScore;
     _killCount = 0;
+
+    SKLT_SPEED_START = this.props.speed;
+    HRS_SPEED_START = this.props.speed;
 
     ANGLE_FROM = this.props.allowHitFrom;
     ANGLE_TO = this.props.allowHitTo;
@@ -187,7 +189,6 @@ export default class View2 extends PixiContainer {
       gain: 0,
       ease: Linear.easeNone,
       onUpdate: function () {
-        // xSpeed = obj.gain * SKLT_SPEED_MAX;
         this.horseman.setHorseSpeed(obj.gain * horseSpeed);
       }.bind(this),
       onComplete: function () {
@@ -220,8 +221,6 @@ export default class View2 extends PixiContainer {
       gain: 1,
       ease: Linear.easeNone,
       onUpdate: function () {
-        // xSpeed = SKLT_SPEED_START + obj.gain * (SKLT_SPEED_MAX - SKLT_SPEED_START);
-        // this.horseman.setHorseSpeed(HRS_SPEED_START + obj.gain * (HRS_SPEED_MAX - HRS_SPEED_START));
         skeletonSpeed = SKLT_SPEED_START_0 + obj.gain * (SKLT_SPEED_START - SKLT_SPEED_START_0);
         horseSpeed = HRS_SPEED_START_0 + obj.gain * (HRS_SPEED_START - HRS_SPEED_START_0);
         this.horseman.setHorseSpeed(horseSpeed);
@@ -271,7 +270,7 @@ export default class View2 extends PixiContainer {
         _killCount++;
         this.updateKillsCount(_killCount);
         PIXI.sound.play(Assets.sounds.sndHit);
-        this.updateSpeed();
+        // this.updateSpeed();
 
         this.scene.parent.emit('scoreChanged', _killCount);
       }
@@ -290,25 +289,25 @@ export default class View2 extends PixiContainer {
     this.killCountText.text = count + killsTarget;
   }
 
-  updateSpeed() {
-    if (_killCount >= nextMultChangeAt) {
-      nextMultChangeAt += MULT_CHANGE_STEP;
+  // updateSpeed() {
+  //   if (_killCount >= nextMultChangeAt) {
+  //     nextMultChangeAt += MULT_CHANGE_STEP;
 
-      var mult;
-      if (SPEED_MULTS.length > 1) {
-        mult = SPEED_MULTS.shift();
-      } else {
-        mult = SPEED_MULTS[0];
-      }
+  //     var mult;
+  //     if (SPEED_MULTS.length > 1) {
+  //       mult = SPEED_MULTS.shift();
+  //     } else {
+  //       mult = SPEED_MULTS[0];
+  //     }
 
-      currentSpeedMult = mult;
+  //     currentSpeedMult = mult;
 
-      // updated objects
-      skeletonSpeed *= (1 + currentSpeedMult);
-      horseSpeed *= (1 + currentSpeedMult);
-      this.horseman.setHorseSpeed(horseSpeed);
-    }
-  }
+  //     // updated objects
+  //     skeletonSpeed *= (1 + currentSpeedMult);
+  //     horseSpeed *= (1 + currentSpeedMult);
+  //     this.horseman.setHorseSpeed(horseSpeed);
+  //   }
+  // }
 
   get killCount() {
     return _killCount;

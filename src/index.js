@@ -21,16 +21,21 @@ let data = {
   },
   width: GAME_WIDTH,
   height: GAME_HEIGHT,
-  allowHitFrom: 180,
-  allowHitTo: 90,
-  targetScore: 10    
-} 
+  difficultyLevel: 1,
+  difficultySettings: [
+    { speed: .09 * 1.5, targetScore: 10, allowHitFrom: -180, allowHitTo: -270 },
+    { speed: .09 * 1.25, targetScore: 10, allowHitFrom: -200, allowHitTo: -270 },
+    { speed: .09 * 1.0, targetScore: 15, allowHitFrom: -210, allowHitTo: -270 },
+    { speed: .09 * 1.0, targetScore: 20, allowHitFrom: -230, allowHitTo: -260 },
+    { speed: .09 * 0.8, targetScore: 30, allowHitFrom: -230, allowHitTo: -260 }
+  ]
+}
 
 const miniApp = new MiniApp({
   width: GAME_WIDTH,
   height: GAME_HEIGHT,
   game: HorsemanGame,
-  devt: false,
+  devt: true,
   data: data
 });
 
