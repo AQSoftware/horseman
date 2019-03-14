@@ -27,9 +27,12 @@ type Props = {
   },
   width: number,
   height: number,
-  allowHitFrom: number,
-  allowHitTo: number,
-  targetScore: number
+  difficultySettings: {
+    speed: number,
+    targetScore: number,
+    allowHitFrom: number,
+    allowHitTo: number
+  }
 }
 
 export default class HorsemanGame extends Game<Props> {
@@ -41,6 +44,8 @@ export default class HorsemanGame extends Game<Props> {
 
   width: number;
   height: number;
+
+  settings: any;
 
   gameDidMount() {
     // Add additional assets to load which are passed through this.props.engagementInfo
@@ -58,7 +63,7 @@ export default class HorsemanGame extends Game<Props> {
     // this.app.stage.addChild(bg);
 
     this._initEvents();
-    this.reset();
+    this.reset(this.props);
 
     // Inform the host app that we are ready to be displayed
     LifeCycle.informReady();
@@ -71,10 +76,19 @@ export default class HorsemanGame extends Game<Props> {
     window.onresize = this.resize.bind(this);
   }
 
-  init() {
-    this.app.speed = 0.5;
-    var hitAngleFrom = this.props.allowHitFrom / 180 * Math.PI;
-    var hitAngleTo = this.props.allowHitTo / 180 * Math.PI;
+  init(data) {
+    var lvl = data.difficultyLevel || 1;
+    lvl--;
+    this.settings = {
+      speed: data.speed[lvl],
+      targetScore: data.hasTargetScore ? data.targetScore[lvl] : 0,
+      allowHitFrom: data.allowHitFrom[lvl],
+      allowHitTo: data.allowHitTo[lvl]
+    };
+
+    this.app.speed = this.settings.speed;
+    var hitAngleFrom = this.settings.allowHitFrom / 180 * Math.PI;
+    var hitAngleTo = this.settings.allowHitTo / 180 * Math.PI;
 
     // normalize with horseman.getRotation() return value (zero is at 90° not at 0°)
     hitAngleFrom += Math.PI / 2;
@@ -85,21 +99,26 @@ export default class HorsemanGame extends Game<Props> {
 
     this.scenes = [];
     this.scenes.push({
-      name: 'view1', scene: new View1(PIXI, this.props.width, this.props.height, {
+      name: 'view1', scene: new View1(PIXI, data.width, data.height, {
         ticker: this.tickCallback,
         onPress: this._onView1Click.bind(this),
+        startCaption: (this.settings.targetScore && this.settings.targetScore > 0) ? data.startCaption.replace('#ts', this.settings.targetScore) : 'Hit as many sculls',
         allowHitFrom: hitAngleFrom,
         allowHitTo: hitAngleTo,
-        targetScore: this.props.targetScore
+        targetScore: this.settings.targetScore,
+        speed: this.settings.speed
       })
     });
     this.scenes.push({
-      name: 'view2', scene: new View2(PIXI, this.props.width, this.props.height, {
+      name: 'view2', scene: new View2(PIXI, data.width, data.height, {
         ticker: this.tickCallback.bind(this),
         // onPress: this._onView2Click.bind(this),
+        winCaption: data.winCaption,
+        loseCaption: data.loseCaption,
         allowHitFrom: hitAngleFrom,
         allowHitTo: hitAngleTo,
-        targetScore: this.props.targetScore
+        targetScore: this.settings.targetScore,
+        speed: this.settings.speed
       })
     });
     this.setup();
@@ -125,10 +144,10 @@ export default class HorsemanGame extends Game<Props> {
 
   onReset(data: Props) {
     console.log(`onReset: ${JSON.stringify(data)}`);
-    this.reset();
+    this.reset(data);
   }
 
-  reset() {
+  reset(data) {
     console.log('-- RESET --');
     PIXI.sound.stopAll();
 
@@ -136,7 +155,7 @@ export default class HorsemanGame extends Game<Props> {
       this.app.stage.removeChild(this.livesCount);
     }
 
-    this.init();
+    this.init(data);
   }
 
   _onLivesNumChanged(diff: number) {
@@ -148,7 +167,7 @@ export default class HorsemanGame extends Game<Props> {
   }
 
   _onScoreChanged(score: number) {
-    var targetScore = this.props.targetScore || 0;
+    var targetScore = this.settings.targetScore || 0;
     if (targetScore > 0 && score == targetScore) {
       this.showGameOver();
     }
@@ -208,7 +227,7 @@ export default class HorsemanGame extends Game<Props> {
     var score = this.scenes[1].scene.killCount;
     var didWin = false;
 
-    var targetScore = this.props.targetScore || 0;
+    var targetScore = this.settings.targetScore || 0;
     if (targetScore > 0 && score == targetScore) {
       didWin = true;
     }
@@ -222,7 +241,7 @@ export default class HorsemanGame extends Game<Props> {
       winCriteria: didWin ? WinCriteriaEnum.Win : WinCriteriaEnum.Lose,
       score: {
         value: score,
-        target: this.props.targetScore
+        target: this.settings.targetScore
       }
     });
     // Inform the host app that our mini app has ended

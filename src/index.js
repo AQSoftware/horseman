@@ -21,16 +21,22 @@ let data = {
   },
   width: GAME_WIDTH,
   height: GAME_HEIGHT,
-  allowHitFrom: 180,
-  allowHitTo: 90,
-  targetScore: 10    
-} 
+  difficultyLevel: 1,
+  hasTargetScore: true,
+  startCaption: "Hit #ts skulls",
+  winCaption: "You did it",
+  loseCaption: "Not quite",
+  speed: [1.5 * .09, 1.25 * .09, 1 * .09, 0.75 * .09, 0.5 * .09],
+  targetScore: [10, 10, 10, 15, 20],
+  allowHitFrom: [-180, -200, -210, -230, -230],
+  allowHitTo: [-270, -270, -270, -260, -260]
+}
 
 const miniApp = new MiniApp({
   width: GAME_WIDTH,
   height: GAME_HEIGHT,
   game: HorsemanGame,
-  devt: false,
+  devt: true,
   data: data
 });
 
