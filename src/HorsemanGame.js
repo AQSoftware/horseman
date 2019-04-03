@@ -23,16 +23,17 @@ const PIXI = window.PIXI;
 
 type Props = {
   engagementInfo: {
-    background: string
+    background: string,
+    startCaption: string,
+    winCaption: string,
+    loseCaption: string,
+    speed: any,
+    targetScore: any,
+    allowHitFrom: any,
+    allowHitTo: any
   },
   width: number,
-  height: number,
-  difficultySettings: {
-    speed: number,
-    targetScore: number,
-    allowHitFrom: number,
-    allowHitTo: number
-  }
+  height: number
 }
 
 export default class HorsemanGame extends Game<Props> {
@@ -77,13 +78,14 @@ export default class HorsemanGame extends Game<Props> {
   }
 
   init(data) {
+    var eInfo = data.engagementInfo;
     var lvl = data.difficultyLevel || 1;
     lvl--;
     this.settings = {
-      speed: data.speed[lvl],
-      targetScore: data.hasTargetScore ? data.targetScore[lvl] : 0,
-      allowHitFrom: data.allowHitFrom[lvl],
-      allowHitTo: data.allowHitTo[lvl]
+      speed: eInfo.speed[lvl],
+      targetScore: data.hasTargetScore ? eInfo.targetScore[lvl] : 0,
+      allowHitFrom: eInfo.allowHitFrom[lvl],
+      allowHitTo: eInfo.allowHitTo[lvl]
     };
 
     this.app.speed = this.settings.speed;
@@ -102,7 +104,7 @@ export default class HorsemanGame extends Game<Props> {
       name: 'view1', scene: new View1(PIXI, data.width, data.height, {
         ticker: this.tickCallback,
         onPress: this._onView1Click.bind(this),
-        startCaption: (this.settings.targetScore && this.settings.targetScore > 0) ? data.startCaption.replace('#ts', this.settings.targetScore) : 'Hit as many sculls',
+        startCaption: (this.settings.targetScore && this.settings.targetScore > 0) ? eInfo.startCaption.replace('#ts', this.settings.targetScore) : 'Hit as many sculls',
         allowHitFrom: hitAngleFrom,
         allowHitTo: hitAngleTo,
         targetScore: this.settings.targetScore,
@@ -113,8 +115,8 @@ export default class HorsemanGame extends Game<Props> {
       name: 'view2', scene: new View2(PIXI, data.width, data.height, {
         ticker: this.tickCallback.bind(this),
         // onPress: this._onView2Click.bind(this),
-        winCaption: data.winCaption,
-        loseCaption: data.loseCaption,
+        winCaption: eInfo.winCaption,
+        loseCaption: eInfo.loseCaption,
         allowHitFrom: hitAngleFrom,
         allowHitTo: hitAngleTo,
         targetScore: this.settings.targetScore,

@@ -17,19 +17,19 @@ let data = {
   shouldWin: false,
   winImage: "https://s3.amazonaws.com/famers/720/F1040881145111POSYEB.png",
   engagementInfo: {
-    background: "https://s3.amazonaws.com/famers/720/F1040881145112DFY3HK.jpg"
+    background: "https://s3.amazonaws.com/famers/720/F1040881145112DFY3HK.jpg",
+    startCaption: "Hit #ts skulls",
+    winCaption: "You did it",
+    loseCaption: "Not quite",
+    speed: [1.5 * .09, 1.25 * .09, 1 * .09, 0.75 * .09, 0.5 * .09],
+    targetScore: [10, 10, 10, 15, 20],
+    allowHitFrom: [-180, -200, -210, -230, -230],
+    allowHitTo: [-270, -270, -270, -260, -260]  
   },
   width: GAME_WIDTH,
   height: GAME_HEIGHT,
   difficultyLevel: 1,
-  hasTargetScore: true,
-  startCaption: "Hit #ts skulls",
-  winCaption: "You did it",
-  loseCaption: "Not quite",
-  speed: [1.5 * .09, 1.25 * .09, 1 * .09, 0.75 * .09, 0.5 * .09],
-  targetScore: [10, 10, 10, 15, 20],
-  allowHitFrom: [-180, -200, -210, -230, -230],
-  allowHitTo: [-270, -270, -270, -260, -260]
+  hasTargetScore: true
 }
 
 const miniApp = new MiniApp({
