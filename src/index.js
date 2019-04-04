@@ -36,7 +36,7 @@ const miniApp = new MiniApp({
   width: GAME_WIDTH,
   height: GAME_HEIGHT,
   game: HorsemanGame,
-  devt: true,
+  devt: false,
   data: data
 });
 
