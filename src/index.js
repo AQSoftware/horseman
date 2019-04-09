@@ -17,7 +17,7 @@ let data = {
   shouldWin: false,
   winImage: "https://s3.amazonaws.com/famers/720/F1040881145111POSYEB.png",
   engagementInfo: {
-    background: "https://s3.amazonaws.com/famers/720/F1040881145112DFY3HK.jpg",
+    // background: "https://s3.amazonaws.com/famers/orig/F591829835240ZVZ5A.jpg",
     startCaption: "Hit #ts skulls",
     winCaption: "You did it",
     loseCaption: "Not quite",

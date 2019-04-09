@@ -49,20 +49,10 @@ export default class HorsemanGame extends Game<Props> {
   settings: any;
 
   gameDidMount() {
-    // Add additional assets to load which are passed through this.props.engagementInfo
-    const thingsToLoad = ASSETS.concat([
-      this.props.engagementInfo.background
-    ]);
-    this.loadAssets(thingsToLoad);
+    this.loadAssets(ASSETS);
   }
 
   gameDidLoad(loader: any, resources: any) {
-
-    const bg = new PIXI.Sprite(resources[this.props.engagementInfo.background].texture)
-    bg.width = this.app.renderer.width;
-    bg.height = this.app.renderer.height;
-    // this.app.stage.addChild(bg);
-
     this._initEvents();
     this.reset(this.props);
 
@@ -79,6 +69,13 @@ export default class HorsemanGame extends Game<Props> {
 
   init(data) {
     var eInfo = data.engagementInfo;
+
+    if (eInfo['background'] && eInfo.background.length > 0)
+      PIXI.loader
+        .add(eInfo.background, { crossOrigin: true })
+        .on("progress", function (e) { console.log('bg load', e.progress); })
+        .load(this.onBgLoaded.bind(this));
+
     var lvl = data.difficultyLevel || 1;
     lvl--;
     this.settings = {
@@ -124,6 +121,13 @@ export default class HorsemanGame extends Game<Props> {
       })
     });
     this.setup();
+  }
+
+  onBgLoaded(loader, resources) {
+    const bg = new PIXI.Sprite(resources[this.props.engagementInfo.background].texture)
+    bg.width = this.app.renderer.width;
+    bg.height = this.app.renderer.height;
+    this.app.stage.addChildAt(bg, 0);
   }
 
   /**

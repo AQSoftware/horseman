@@ -30,10 +30,10 @@ var HRS_SPEED_START;
 var skeletonSpeed;
 var horseSpeed;
 
-// const MULT_CHANGE_STEP = 4;
-// var SPEED_MULTS = [.2, .2, .2, .1];
-// var nextMultChangeAt = MULT_CHANGE_STEP;
-// var currentSpeedMult = 1;
+const MULT_CHANGE_STEP = 4;
+var SPEED_MULTS = [.2, .2, .2, .1];
+var nextMultChangeAt = MULT_CHANGE_STEP;
+var currentSpeedMult = 1;
 
 var _targetScore;
 
@@ -270,7 +270,7 @@ export default class View2 extends PixiContainer {
         _killCount++;
         this.updateKillsCount(_killCount);
         PIXI.sound.play(Assets.sounds.sndHit);
-        // this.updateSpeed();
+        this.updateSpeed();
 
         this.scene.parent.emit('scoreChanged', _killCount);
       }
@@ -289,25 +289,25 @@ export default class View2 extends PixiContainer {
     this.killCountText.text = count + killsTarget;
   }
 
-  // updateSpeed() {
-  //   if (_killCount >= nextMultChangeAt) {
-  //     nextMultChangeAt += MULT_CHANGE_STEP;
+  updateSpeed() {
+    if (_killCount >= nextMultChangeAt) {
+      nextMultChangeAt += MULT_CHANGE_STEP;
 
-  //     var mult;
-  //     if (SPEED_MULTS.length > 1) {
-  //       mult = SPEED_MULTS.shift();
-  //     } else {
-  //       mult = SPEED_MULTS[0];
-  //     }
+      var mult;
+      if (SPEED_MULTS.length > 1) {
+        mult = SPEED_MULTS.shift();
+      } else {
+        mult = SPEED_MULTS[0];
+      }
 
-  //     currentSpeedMult = mult;
+      currentSpeedMult = mult;
 
-  //     // updated objects
-  //     skeletonSpeed *= (1 + currentSpeedMult);
-  //     horseSpeed *= (1 + currentSpeedMult);
-  //     this.horseman.setHorseSpeed(horseSpeed);
-  //   }
-  // }
+      // updated objects
+      skeletonSpeed *= (1 + currentSpeedMult);
+      horseSpeed *= (1 + currentSpeedMult);
+      this.horseman.setHorseSpeed(horseSpeed);
+    }
+  }
 
   get killCount() {
     return _killCount;
