@@ -9,7 +9,6 @@ import {
 import * as PixiContainer from './components/PixiContainer';
 import { PixiButton } from './components';
 import {
-  BackgroundScene,
   View1, View2, View3
 } from './views/scenes';
 import LivesCount from './components/LivesCount';
@@ -50,6 +49,7 @@ export default class HorsemanGame extends Game<Props> {
 
   gameDidMount() {
     this.loadAssets(ASSETS);
+    this.runCounter = 0;
   }
 
   gameDidLoad(loader: any, resources: any) {
@@ -70,11 +70,13 @@ export default class HorsemanGame extends Game<Props> {
   init(data) {
     var eInfo = data.engagementInfo;
 
-    if (eInfo['background'] && eInfo.background.length > 0)
-      PIXI.loader
+    if (eInfo['background'] && eInfo.background.length > 0) {
+      var loader = new PIXI.loaders.Loader();
+      loader
         .add(eInfo.background, { crossOrigin: true })
-        .on("progress", function (e) { console.log('bg load', e.progress); })
+        // .on("progress", function (e) { console.log('bg load', e.progress); })
         .load(this.onBgLoaded.bind(this));
+    }
 
     var lvl = data.difficultyLevel || 1;
     lvl--;
@@ -95,6 +97,8 @@ export default class HorsemanGame extends Game<Props> {
 
     hitAngleFrom = normalizeRadians(hitAngleFrom);
     hitAngleTo = normalizeRadians(hitAngleTo);
+
+    this.clearScenes();
 
     this.scenes = [];
     this.scenes.push({
@@ -124,16 +128,35 @@ export default class HorsemanGame extends Game<Props> {
   }
 
   onBgLoaded(loader, resources) {
+    if (this.background) {
+      this.app.stage.removeChild(this.background);
+      this.background = null;
+    }
     const bg = new PIXI.Sprite(resources[this.props.engagementInfo.background].texture)
     bg.width = this.app.renderer.width;
     bg.height = this.app.renderer.height;
+    this.background = bg;
     this.app.stage.addChildAt(bg, 0);
+  }
+
+  clearScenes() {
+    if (!this.scenes || this.scenes.length == 0) return;
+
+    if (this.livesCount) {
+      this.app.stage.removeChild(this.livesCount);
+    }
+
+    for (let i = 0; i < this.scenes.length; i++) {
+      this.scenes[i]['scene'].destroy();
+    }
   }
 
   /**
   Setup function to setup scenes
   */
   setup() {
+    console.log('setup()');
+    this.runCounter++;
 
     for (let i = 0; i < this.scenes.length; i++) {
       this.scenes[i]['scene'].setup();
@@ -157,10 +180,6 @@ export default class HorsemanGame extends Game<Props> {
     console.log('-- RESET --');
     PIXI.sound.stopAll();
 
-    if (this.livesCount) {
-      this.app.stage.removeChild(this.livesCount);
-    }
-
     this.init(data);
   }
 
@@ -180,6 +199,8 @@ export default class HorsemanGame extends Game<Props> {
   }
 
   _setPage(page: number) {
+    console.log('_setpage()', page);
+
     this.pageNumber = page;
     if (this.currentScene) {
       this.app.stage.removeChild(this.currentScene);

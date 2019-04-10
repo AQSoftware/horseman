@@ -13,7 +13,7 @@ export default class PixiContainer {
   height   - Group height
   props    - Additional props
   */
-  constructor(pixi, width, height, props){
+  constructor(pixi, width, height, props) {
     this.pixi = pixi;
     this.width = width;
     this.height = height;
@@ -25,12 +25,19 @@ export default class PixiContainer {
   Determines whether the sceen will receive touches. Used primarily
   for enabling/disabling Hexi buttons. See HexiButton.enabled
   */
-  get enabled(){
+  get enabled() {
     return this.scene.interactive;
   }
 
-  set enabled(value){
+  set enabled(value) {
     this.scene.interactive = value;
+  }
+
+  destroy() {
+    console.log('PixiContainer.destroy', this.scene.parent);
+    if (this.scene.parent) {
+      this.scene.parent.removeChild(this.scene);
+    }
   }
 
   /**
@@ -42,7 +49,7 @@ export default class PixiContainer {
 
   Return value - True if gesture is handled, false if not
   */
-  onTap(){
+  onTap() {
     return false;
   }
 }
