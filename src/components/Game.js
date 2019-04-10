@@ -5,9 +5,14 @@ const PIXI = window.PIXI;
 export default class Game<T> {
   props: T;
   app: PIXI.Application;
+  
+  width: number;
+  height: number;
 
   constructor(app: PIXI.Application, props: T) {
     this.app = app;
+    this.width = app.renderer.width;
+    this.height = app.renderer.height;
     this.props = props;
   }
 

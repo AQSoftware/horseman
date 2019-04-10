@@ -8,8 +8,6 @@ const PIXI = window.PIXI;
 const BACKGROUND_COLOR = 0x86b8a9;
 
 type Props = {
-  width: number,
-  height: number,
   game: any,
   devt: boolean,
   data: Object
@@ -64,8 +62,8 @@ export default class MiniApp {
     }
 
     this.app = new PIXI.Application({
-      width: this.props.width,
-      height: this.props.height,
+      width: window.innerWidth,
+      height: window.innerHeight,
       antialias: true,
       transparent: false,
       resolution: 1,
@@ -73,7 +71,7 @@ export default class MiniApp {
     });
 
     // Merge data with game-relevant data
-    const updated = Object.assign({}, this.props.data, data, { width: this.props.width, height: this.props.height });
+    const updated = Object.assign({}, this.props.data, data);
     this.game = new this.props.game(this.app, updated);
 
     if (document.body != null) {

@@ -2,8 +2,6 @@
 import MiniApp from './components/MiniApp';
 import HorsemanGame from './HorsemanGame';
 
-const GAME_WIDTH = window.innerWidth;
-const GAME_HEIGHT = window.innerHeight;
 const DEVT = true;
 
 /**
@@ -31,8 +29,6 @@ let data = {
 }
 
 const miniApp = new MiniApp({
-  width: GAME_WIDTH,
-  height: GAME_HEIGHT,
   game: HorsemanGame,
   devt: false,
   data: data

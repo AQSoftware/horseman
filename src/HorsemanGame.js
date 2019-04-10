@@ -30,9 +30,7 @@ type Props = {
     targetScore: any,
     allowHitFrom: any,
     allowHitTo: any
-  },
-  width: number,
-  height: number
+  }
 }
 
 export default class HorsemanGame extends Game<Props> {
@@ -41,9 +39,6 @@ export default class HorsemanGame extends Game<Props> {
   livesCount: LivesCount;
   pageNumber: number;
   currentScene: any;
-
-  width: number;
-  height: number;
 
   settings: any;
 
@@ -102,7 +97,7 @@ export default class HorsemanGame extends Game<Props> {
 
     this.scenes = [];
     this.scenes.push({
-      name: 'view1', scene: new View1(PIXI, data.width, data.height, {
+      name: 'view1', scene: new View1(PIXI, this.width, this.height, {
         ticker: this.tickCallback,
         onPress: this._onView1Click.bind(this),
         startCaption: (this.settings.targetScore && this.settings.targetScore > 0) ? eInfo.startCaption.replace('#ts', this.settings.targetScore) : 'Hit as many sculls',
@@ -113,7 +108,7 @@ export default class HorsemanGame extends Game<Props> {
       })
     });
     this.scenes.push({
-      name: 'view2', scene: new View2(PIXI, data.width, data.height, {
+      name: 'view2', scene: new View2(PIXI, this.width, this.height, {
         ticker: this.tickCallback.bind(this),
         // onPress: this._onView2Click.bind(this),
         winCaption: eInfo.winCaption,
@@ -164,7 +159,7 @@ export default class HorsemanGame extends Game<Props> {
     this._setPage(0);
 
     const livesCount = new LivesCount(DEFAULT_LIVES_COUNT);
-    livesCount.x = (this.props.width - 10);
+    livesCount.x = (this.width - 10);
     livesCount.y = 10;
     livesCount.alpha = 0;
     this.app.stage.addChild(livesCount);
@@ -271,7 +266,7 @@ export default class HorsemanGame extends Game<Props> {
         target: this.settings.targetScore
       }
     });
-    // Inform the host app that our mini app has ended
+    // Inform the host app that our mini has ended
     setTimeout(() => { console.log('LifeCycle.end()'); LifeCycle.end(); }, END_DELAY);
   }
 }
