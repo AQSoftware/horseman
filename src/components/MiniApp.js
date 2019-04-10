@@ -73,7 +73,7 @@ export default class MiniApp {
     });
 
     // Merge data with game-relevant data
-    const updated = Object.assign({}, this.props.data, data);
+    const updated = Object.assign({}, this.props.data, data, { width: this.props.width, height: this.props.height });
     this.game = new this.props.game(this.app, updated);
 
     if (document.body != null) {

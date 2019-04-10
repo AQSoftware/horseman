@@ -26,8 +26,6 @@ let data = {
     allowHitFrom: [-180, -200, -210, -230, -230],
     allowHitTo: [-270, -270, -270, -260, -260]  
   },
-  width: GAME_WIDTH,
-  height: GAME_HEIGHT,
   difficultyLevel: 1,
   hasTargetScore: true
 }
