@@ -25,6 +25,7 @@ let data = {
     allowHitTo: [-270, -270, -270, -260, -260]  
   },
   difficultyLevel: 1,
+  isSoundMuted: false,
   hasTargetScore: true
 }
 

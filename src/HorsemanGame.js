@@ -173,6 +173,7 @@ export default class HorsemanGame extends Game<Props> {
 
   reset(data) {
     console.log('-- RESET --');
+    if (data['isSoundMuted']) window.isSoundMuted = data['isSoundMuted'];
     PIXI.sound.stopAll();
 
     this.init(data);
@@ -183,7 +184,11 @@ export default class HorsemanGame extends Game<Props> {
 
     window.isSoundMuted = state.isSoundMuted || (state.state != 'active');
 
-    if (window.isSoundMuted) PIXI.sound.stopAll();
+    if (window.isSoundMuted) {
+      PIXI.sound.stopAll();
+    } else {
+      PIXI.sound.play(Assets.sounds.sndBackground, { loop: true });
+    }
   }
 
   _onLivesNumChanged(diff: number) {
