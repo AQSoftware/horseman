@@ -171,7 +171,7 @@ export default class View2 extends PixiContainer {
   onLifeLost() {
     this.scene.parent.emit('livesNumChanged', -1);
     TweenMax.to(this.horseman.container, .05, { alpha: .2, yoyo: true, repeat: 5 });
-    PIXI.sound.play(Assets.sounds.sndClick);
+    if (!window.isSoundMuted) PIXI.sound.play(Assets.sounds.sndClick);
   }
 
   showGameOver(didWin) {
@@ -197,7 +197,7 @@ export default class View2 extends PixiContainer {
     });
 
     PIXI.sound.stopAll();
-    PIXI.sound.play(Assets.sounds.sndFinal);
+    if (!window.isSoundMuted) PIXI.sound.play(Assets.sounds.sndFinal);
 
     // remove event listeners
     this.scene.off('pointerdown');
@@ -269,7 +269,7 @@ export default class View2 extends PixiContainer {
         this.skeleton.performKill(index);
         _killCount++;
         this.updateKillsCount(_killCount);
-        PIXI.sound.play(Assets.sounds.sndHit);
+        if (!window.isSoundMuted) PIXI.sound.play(Assets.sounds.sndHit);
         this.updateSpeed();
 
         this.scene.parent.emit('scoreChanged', _killCount);

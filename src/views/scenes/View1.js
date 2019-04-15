@@ -69,6 +69,15 @@ export default class View1 extends PixiContainer {
     this.scene.addChild(circle);
     this.circle = circle;
 
+    var btnBg = new PIXI.Graphics();
+    btnBg.interactive = true;
+    btnBg.pointerup = this.props.onPress;
+    btnBg.beginFill(0xff0000, .0);
+    btnBg.drawRect(0, 0, this.width, this.height);
+    btnBg.endFill();
+
+    this.gameContainer.addChild(btnBg);
+
     this.doAnimate = false;
   }
 
@@ -140,7 +149,7 @@ export default class View1 extends PixiContainer {
   activate() {
     this.startAnimation();
     setTimeout(() => {
-      PIXI.sound.play(Assets.sounds.sndBackground, { loop: true });
+      if (!window.isSoundMuted) PIXI.sound.play(Assets.sounds.sndBackground, { loop: true });
     }, 100);
   }
 

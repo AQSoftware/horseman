@@ -1,6 +1,6 @@
 // @flow
 import {
-  LifeCycle
+  LifeCycle, Events
 } from 'aq-miniapp-core';
 import Game from './Game';
 
@@ -23,6 +23,7 @@ export default class MiniApp {
     this.props = props;
 
     LifeCycle.setOnResetCallback(this.onReset.bind(this));
+    LifeCycle.setCallback(Events.ON_APP_STATE_CHANGE, this.onAppStateChange.bind(this));
 
     if (props.devt) {
       this.onData(props.data);
@@ -40,6 +41,14 @@ export default class MiniApp {
       }
       else {
         this.game.onReset(newData);
+      }
+    }
+  }
+
+  onAppStateChange(state: Object) {
+    if (this.game) {
+      if (this.game['onAppStateChange']) {
+        this.game['onAppStateChange'](state);
       }
     }
   }

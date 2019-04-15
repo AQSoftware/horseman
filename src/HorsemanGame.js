@@ -100,7 +100,7 @@ export default class HorsemanGame extends Game<Props> {
       name: 'view1', scene: new View1(PIXI, this.width, this.height, {
         ticker: this.tickCallback,
         onPress: this._onView1Click.bind(this),
-        startCaption: (this.settings.targetScore && this.settings.targetScore > 0) ? eInfo.startCaption.replace('#ts', this.settings.targetScore) : 'Hit as many sculls',
+        startCaption: (this.settings.targetScore && this.settings.targetScore > 0) ? eInfo.startCaption.replace('#ts', this.settings.targetScore) : 'Hit as many skulls',
         allowHitFrom: hitAngleFrom,
         allowHitTo: hitAngleTo,
         targetScore: this.settings.targetScore,
@@ -176,6 +176,14 @@ export default class HorsemanGame extends Game<Props> {
     PIXI.sound.stopAll();
 
     this.init(data);
+  }
+
+  onAppStateChange(state: Object) {
+    console.log(`onAppStateChange: ${JSON.stringify(state)}`);
+
+    window.isSoundMuted = state.isSoundMuted || (state.state != 'active');
+
+    if (window.isSoundMuted) PIXI.sound.stopAll();
   }
 
   _onLivesNumChanged(diff: number) {
